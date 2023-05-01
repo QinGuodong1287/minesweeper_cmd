@@ -2,6 +2,7 @@ import json
 import os
 
 import constants
+import basic_functions
 
 lang_path = os.path.join(constants.program_path, r"lang")
 if not os.path.exists(lang_path):
@@ -14,3 +15,4 @@ else:
 if need_mkdir:
     os.mkdir(lang_path)
 del need_mkdir
+
