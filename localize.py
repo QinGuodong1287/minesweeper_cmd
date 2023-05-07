@@ -1,4 +1,3 @@
-import json
 import os
 
 import constants
@@ -15,4 +14,8 @@ else:
 if need_mkdir:
     os.mkdir(lang_path)
 del need_mkdir
-
+localize_settings = {}
+lang_index_file = os.path.join(lang_path, r"lang.json")
+basic_functions.loadDict(lang_index_file, localize_settings)
+localize_settings.setdefault("lang", "zh-CN")
+basic_functions.saveFile(lang_index_file, localize_settings)

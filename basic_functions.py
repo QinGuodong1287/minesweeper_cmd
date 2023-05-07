@@ -12,15 +12,15 @@ def loadFile(file_name, default=None):
     if not os.path.exists(file_name):
         if default is None:
             return None
-        with open(file_name, "w") as fp:
+        with open(file_name, "w", encoding="utf-8") as fp:
             json.dump(default, fp, ensure_ascii=False)
-    with open(file_name, "r") as fp:
+    with open(file_name, "r", encoding="utf-8") as fp:
         data = json.load(fp)
     return data
 
 
 def saveFile(file_name, data):
-    with open(file_name, "w") as fp:
+    with open(file_name, "w", encoding="utf-8") as fp:
         json.dump(data, fp, indent=4, ensure_ascii=False)
 
 
