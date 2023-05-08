@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -163,6 +162,13 @@ cython_debug/
 # Vim temp files.
 *.swp
 *~
+
+# Data files.
+records.json
+settings.json
+
+# Logs.
+error.log
 
 # Other ignored files.
 legacy/*
