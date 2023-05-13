@@ -166,6 +166,7 @@ cython_debug/
 # Data files.
 records.json
 settings.json
+map.json
 
 # Logs.
 error.log
