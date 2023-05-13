@@ -160,7 +160,7 @@ cython_debug/
 #.idea/
 
 # Vim temp files.
-*.swp
+*.sw*
 *~
 
 # Data files.
