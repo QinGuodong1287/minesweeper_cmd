@@ -62,10 +62,10 @@ def translate(source_text: str, dictionary: dict) -> str:
     return dictionary.get(localize_settings["lang"], source_text)
 
 
-untranslated_text_log_file = os.path.join(lang_path, r"untranslated_text.txt")
+untranslated_text_log_file = os.path.join(lang_path, r"untranslated_text.json")
 if os.path.exists(untranslated_text_log_file):
-    with open(untranslated_text_log_file, "r") as log:
-        untranslated_text_set = set(log.readlines())
+    untranslated_text_set = set(basic_functions.loadDict(
+        untranslated_text_log_file))
 else:
     untranslated_text_set = set()
 
@@ -87,6 +87,5 @@ def saveLocalizeData():
     basic_functions.saveFile(lang_index_file, localize_settings)
     if localize_settings["log_untranslated_text_flag"]:
         global untranslated_text_set, untranslated_text_log_file
-        with open(untranslated_text_log_file, "w") as log:
-            for text in untranslated_text_set:
-                log.write(repr(text + '\n'))
+        basic_functions.saveFile(untranslated_text_log_file,
+                                 untranslated_text_set)

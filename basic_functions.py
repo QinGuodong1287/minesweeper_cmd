@@ -37,3 +37,4 @@ def loadDict(file_name, d):
     new_d = loadFile(file_name, d)
     for key, value in new_d.items():
         d[key] = value
+    return d
