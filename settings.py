@@ -6,6 +6,8 @@ from constants import settings_file
 from basic_functions import uni_len, str_ljust, loadDict, saveFile
 import graphics
 import tutorial
+import localize
+
 
 class Settings(tutorial.GameTutorialMixin, graphics.Window):
     def __init__(self, parent):
@@ -13,15 +15,18 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
         global settings
         self.settings = settings
         self.options = [
-            {"name": "键位设置", "command": self.setKeyMap}
+            {"name": localize.tr("键位设置"), "command": self.setKeyMap}
         ]
-        self.max_name_len = max(self.options, key=lambda option: uni_len(option["name"]))
+        self.max_name_len = max(self.options,
+                                key=lambda option: uni_len(option["name"]))
         self.cur_index = 0
         self.options_len = len(self.options)
-        self.default_key_notice = "按上下键切换所选设置，按Enter键打开所选设置，按“q”键退出设置。"
+        self.default_key_notice = localize.tr(
+            "按上下键切换所选设置，按Enter键打开所选设置，按“q”键退出设置。")
         self.reg_tutor("common", self.default_key_notice)
 
-    def showPage(self, *geometries, key_notice=None, key_handler=None, update=True, tutor=None):
+    def showPage(self, *geometries, key_notice=None, key_handler=None,
+                 update=True, tutor=None):
         self.win.erase()
         terminal_size = os.get_terminal_size()
         self.win.addstr(0, 0, "游戏设置", curses.A_NORMAL)
@@ -32,7 +37,8 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
         self.win.addstr(1, 0, key_notice, curses.A_NORMAL)
         start_y = 1 + len(key_notice.splitlines())
         indent = 4
-        spaces = ' ' * indent
+        # spaces = ' ' * indent
+
         def translate(item, keep_normal=False):
             if callable(item) and not keep_normal:
                 res = item()
@@ -48,11 +54,13 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
                     return {"text": str(res), "attr": curses.A_NORMAL}
             else:
                 return {"text": str(item), "attr": curses.A_NORMAL}
+
         def getColumnWidth(geometry, depth=0):
             if isinstance(geometry, dict):
                 new_width = width = indent * depth
                 for label, subitem in geometry.items():
-                    width = max(indent * depth + uni_len(translate(label, not update)["text"]), new_width)
+                    width = max(indent * depth + uni_len(translate(
+                        label, not update)["text"]), new_width)
                     new_width = max(getColumnWidth(subitem, depth + 1), width)
                 return new_width
             elif isinstance(geometry, (list, set, frozenset)):
@@ -61,24 +69,32 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
                     width = max(getColumnWidth(line, depth), width)
                 return width
             elif isinstance(geometry, tuple):
-                return indent * depth + (uni_len(translate(geometry[0], not update)["text"]) if geometry else 0)
+                return indent * depth + (uni_len(translate(
+                    geometry[0], not update)["text"]) if geometry else 0)
             else:
-                return indent * depth + uni_len(translate(geometry, not update)["text"])
+                return indent * depth + uni_len(
+                    translate(geometry, not update)["text"])
         cur_y = start_y
+
         def showGeometrySub(geometry, depth=0):
             nonlocal cur_y
             if isinstance(geometry, dict):
                 for label, subitem in geometry.items():
                     data = translate(label, not update)
-                    self.win.addstr(cur_y, indent * depth, data["text"], data["attr"])
+                    self.win.addstr(cur_y, indent * depth, data["text"],
+                                    data["attr"])
                     cur_y += 1
                     showGeometrySub(subitem, depth + 1)
             elif isinstance(geometry, (list, set, frozenset)):
                 for line in geometry:
                     showGeometrySub(line, depth)
             elif isinstance(geometry, tuple):
-                data = translate(geometry[0], not update) if geometry else {"text": "", "attr": curses.A_NORMAL}
-                self.win.addstr(cur_y, indent * depth, data["text"], data["attr"])
+                data = (
+                    translate(geometry[0], not update)
+                    if geometry
+                    else {"text": "", "attr": curses.A_NORMAL})
+                self.win.addstr(cur_y, indent * depth, data["text"],
+                                data["attr"])
                 cur_x = label_width + 1
                 for part in geometry[1:]:
                     data = translate(part, not update)
@@ -87,7 +103,8 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
                 cur_y += 1
             else:
                 data = translate(geometry, not update)
-                self.win.addstr(cur_y, indent * depth, data["text"], data["attr"])
+                self.win.addstr(cur_y, indent * depth, data["text"],
+                                data["attr"])
                 line_num = len(data["text"].splitlines())
                 cur_y += max(line_num, 1)
         for geometry in geometries:
@@ -96,7 +113,8 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
         if tutor is not None:
             self.switch_tutor(str(tutor))
         if key_handler is not None:
-            key = self.win.getch(terminal_size.lines - 1, terminal_size.columns - 1)
+            key = self.win.getch(terminal_size.lines - 1,
+                                 terminal_size.columns - 1)
             if callable(key_handler):
                 key_handler(key)
 
@@ -112,9 +130,16 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
             elif key == ord('\n'):
                 self.options[self.cur_index]["command"]()
         page = [""]
-        name_len = reduce(lambda length, option: max(uni_len(option["name"]), length), self.options, 0)
+        name_len = reduce(
+            lambda length, option: max(uni_len(option["name"]), length),
+            self.options, 0)
         for index, option in enumerate(self.options):
-            page.append(partial(lambda index, option: {"text": str_ljust(option["name"], name_len), "attr": curses.A_REVERSE if index == self.cur_index else curses.A_NORMAL}, index, option))
+            page.append(partial(
+                lambda index, option: {
+                    "text": str_ljust(option["name"], name_len),
+                    "attr": (curses.A_REVERSE
+                             if index == self.cur_index
+                             else curses.A_NORMAL)}, index, option))
         self.showPage(page, key_handler=keyHandler, tutor="common")
 
     def close(self):
@@ -126,48 +151,60 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
         return super().handleException(exc)
 
     key_table = {
-        curses.KEY_UP: "上方向键",
-        curses.KEY_DOWN: "下方向键", 
-        curses.KEY_LEFT: "左方向键",
-        curses.KEY_RIGHT: "右方向键"
+        curses.KEY_UP: localize.tr("上方向键"),
+        curses.KEY_DOWN: localize.tr("下方向键"),
+        curses.KEY_LEFT: localize.tr("左方向键"),
+        curses.KEY_RIGHT: localize.tr("右方向键")
     }
 
     def setKeyMap(self):
         keymap = self.settings["keymap"]
         keyset = keymap["keyset"]
         keyset_num = len(keyset)
+
         def bindFunc(*items):
             nonlocal keymap, keyset
-            key = eval("keyset[keymap[\"current_keyset\"]][\"key\"][{}]".format("][".join(repr(item) for item in items)))
+            key = eval("keyset[keymap[\"current_keyset\"]][\"key\"][{}]"
+                       .format("][".join(repr(item) for item in items)))
             return "{}".format(Settings.key_table.get(key, chr(key)))
-        bind = lambda *items: partial(bindFunc, *items)
-        key_notice = "按左右方向键切换所选方案，按“q”键返回上一级设置。"
+
+        def bind(*items):
+            return partial(bindFunc, *items)
+        key_notice = localize.tr("按左右方向键切换所选方案，按“q”键返回上一级设置。")
         titles = []
         for index, keys in enumerate(keyset):
-            titles.append(partial(lambda index, keys: {"text": keys["name"], "attr": curses.A_REVERSE if index == keymap["current_keyset"] else curses.A_NORMAL}, index, keys))
+            titles.append(partial(
+                lambda index, keys: {"text": keys["name"],
+                                     "attr": (
+                                        curses.A_REVERSE
+                                        if index == keymap["current_keyset"]
+                                        else curses.A_NORMAL)}, index, keys))
         titles = tuple(titles)
         page = []
         page.append({
-            "移动": [
-                ("上", bind("move", "up")),
-                ("下", bind("move", "down")),
-                ("左", bind("move", "left")),
-                ("右", bind("move", "right"))
+            localize.tr("移动"): [
+                (localize.tr("上"), bind("move", "up")),
+                (localize.tr("下"), bind("move", "down")),
+                (localize.tr("左"), bind("move", "left")),
+                (localize.tr("右"), bind("move", "right"))
             ],
-            "操作": [
-                ("翻开格子", bind("action", "check")),
-                ("标记格子（插旗）", bind("action", "flag")),
-                ("翻开3x3范围内格子", bind("action", "detect"))
+            localize.tr("操作"): [
+                (localize.tr("翻开格子"), bind("action", "check")),
+                (localize.tr("标记格子（插旗）"), bind("action", "flag")),
+                (localize.tr("翻开3x3范围内格子"), bind("action", "detect"))
             ],
-            "游戏流程": [
-                ("退出游戏", bind("game", "quit")),
-                ("暂停游戏", bind("game", "pause")),
-                ("保存游戏", bind("game", "save")),
-                ("打开游戏设置", bind("game", "settings"))
+            localize.tr("游戏流程"): [
+                (localize.tr("退出游戏"), bind("game", "quit")),
+                (localize.tr("暂停游戏"), bind("game", "pause")),
+                (localize.tr("保存游戏"), bind("game", "save")),
+                (localize.tr("打开游戏设置"), bind("game", "settings"))
             ]
         })
-        self.reg_tutor("set_key_map", "按左右方向键切换按键方案，\n按“q”键保存所选键位方案并退出键位设置。\n请记住所选键位方案。")
+        self.reg_tutor(
+            "set_key_map",
+            localize.tr("按左右方向键切换按键方案，\n按“q”键保存所选键位方案并退出键位设置。\n请记住所选键位方案。"))
         keep = True
+
         def keyHandler(key):
             nonlocal keep
             if key == ord('q'):
@@ -176,12 +213,21 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
             if key == curses.KEY_LEFT:
                 keymap["current_keyset"] = max(keymap["current_keyset"] - 1, 0)
             elif key == curses.KEY_RIGHT:
-                keymap["current_keyset"] = min(keymap["current_keyset"] + 1, keyset_num - 1)
+                keymap["current_keyset"] = min(keymap["current_keyset"] + 1,
+                                               keyset_num - 1)
         while keep:
-            self.showPage(titles, page, key_notice=key_notice, key_handler=keyHandler, tutor="set_key_map")
+            self.showPage(titles, page, key_notice=key_notice,
+                          key_handler=keyHandler, tutor="set_key_map")
 
-load_settings = lambda settings: loadDict(settings_file, settings)
-save_settings = lambda settings: saveFile(settings_file, settings)
+
+def load_settings(settings):
+    loadDict(settings_file, settings)
+
+
+def save_settings(settings):
+    saveFile(settings_file, settings)
+
+
 settings = {}
 load_settings(settings)
 if "keymap" not in settings:
@@ -220,12 +266,12 @@ keyset.insert(1, {"name": "默认方案2", "key": {
         "down": ord('s'),
         "left": ord('a'),
         "right": ord('d')
-    }, 
+    },
     "action": {
         "check": ord('c'),
         "flag": ord('f'),
         "detect": ord('t')
-    }, 
+    },
     "game": {
         "quit": ord('q'),
         "pause": ord('p'),
@@ -239,12 +285,12 @@ keyset.insert(2, {"name": "默认方案3", "key": {
         "down": ord('k'),
         "left": ord('j'),
         "right": ord('l')
-    }, 
+    },
     "action": {
         "check": ord('c'),
         "flag": ord('f'),
         "detect": ord('t')
-    }, 
+    },
     "game": {
         "quit": ord('q'),
         "pause": ord('p'),
@@ -257,10 +303,15 @@ try:
         raise TypeError
 except TypeError:
     settings["keymap"]["current_keyset"] = 0
+
+
 def check_keymap(index, *names):
     global settings, keyset
-    item = eval("keyset[index][\"key\"]{}".format(("[{}]".format("][".join(repr(name) for name in names))) if names else ''))
-    default_item = eval("settings[\"keymap\"][\"default\"]{}".format(("[{}]".format("][".join(repr(name) for name in names))) if names else ''))
+    item = eval("keyset[index][\"key\"]{}".format(("[{}]".format(
+        "][".join(repr(name) for name in names))) if names else ''))
+    default_item = eval("settings[\"keymap\"][\"default\"]{}".format((
+        "[{}]".format("][".join(repr(name) for name in names)))
+        if names else ''))
     keys = set(item.keys())
     default_keys = default_item.keys()
     keys.update(default_keys)
@@ -273,6 +324,8 @@ def check_keymap(index, *names):
         if isinstance(item[key], dict):
             new_names = tuple(list(names) + [key])
             check_keymap(index, *new_names)
+
+
 for index in range(len(keyset)):
     check_keymap(index)
 del keyset, index

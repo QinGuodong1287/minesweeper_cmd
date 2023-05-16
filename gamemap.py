@@ -12,6 +12,7 @@ import graphics
 import settings
 from record import read_records, store_record, save_records
 import tutorial
+import localize
 
 
 class Block:
@@ -35,7 +36,8 @@ SYMBOL["cover"] = COVER = Block('#', "cover")
 SYMBOL["blank"] = BLANK = Block(' ', "blank")
 SYMBOL["mine"] = MINE = Block('*', "mine")
 SYMBOL["flag"] = FLAG = Block('F', "flag", color_pair=graphics.RED)
-SYMBOL["flagged_mine"] = FLAGGED_MINE = Block('*', "flagged_mine", color_pair=graphics.RED)
+SYMBOL["flagged_mine"] = FLAGGED_MINE = Block('*', "flagged_mine",
+                                              color_pair=graphics.RED)
 NUMBER = [Block(str(num), "number_{}".format(num)) for num in range(10)]
 for symbol in NUMBER:
     SYMBOL[symbol.name] = symbol
@@ -115,26 +117,26 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         read_records(self.records)
         self.reg_tutor(
             "select_mode",
-            "按上下方向键选择所玩模式，按空格键可锁定模式。\n"
-            "“自定义”模式可以自定义地图大小及雷数，\n"
-            "“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。")
+            localize.tr("按上下方向键选择所玩模式，按空格键可锁定模式。\n"
+                        "“自定义”模式可以自定义地图大小及雷数，\n"
+                        "“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。"))
         self.reg_tutor(
             "select_custom_mode",
-            "请输入地图宽度、高度和雷数。\n"
-            "按Tab键切换输入项。\n"
-            "按Enter键确认输入的地图信息。\n"
-            "“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。")
+            localize.tr("请输入地图宽度、高度和雷数。\n"
+                        "按Tab键切换输入项。\n"
+                        "按Enter键确认输入的地图信息。\n"
+                        "“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。"))
         self.reg_tutor(
             "symbols",
-            "地图符号：\n"
-            "        #：未翻开的格子。\n"
-            "     空格：已翻开的格子。\n"
-            "        *：雷。\n"
-            "数字(1-9)：格子周围3x3范围内其余8个格子中含有的雷数。\n"
-            "        F：插旗。")
+            localize.tr("地图符号：\n"
+                        "        #：未翻开的格子。\n"
+                        "     空格：已翻开的格子。\n"
+                        "        *：雷。\n"
+                        "数字(1-9)：格子周围3x3范围内其余8个格子中含有的雷数。\n"
+                        "        F：插旗。"))
         self.reg_tutor(
             "settings_key",
-            lambda: "如果忘记键位或想切换键位方案，可按{}打开设置。".format(
+            lambda: localize.tr("如果忘记键位或想切换键位方案，可按{}打开设置。").format(
                 settings.Settings.key_table.get(
                     self.keyset["game"]["settings"], "“{}”键".format(chr(
                         self.keyset["game"]["settings"])))))
@@ -149,7 +151,8 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
             if self.error:
                 return
             self.win.erase()
-            self.win.addstr(os.get_terminal_size().lines - 1, 0, "正在生成地图……",
+            self.win.addstr(os.get_terminal_size().lines - 1, 0,
+                            localize.tr("正在生成地图……"),
                             curses.A_NORMAL)
             self.win.refresh()
             self.gen_map()
@@ -176,12 +179,15 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         mode_win = self.win.derwin(0, 0)
         mode_win.nodelay(False)
         mode_win.keypad(True)
-        prompt = "请按上下方向键选择模式，\n按空格键选择是否锁定该模式，\n按“q”键退出该界面。".splitlines()
+        prompt = localize.tr("请按上下方向键选择模式，\n按空格键选择是否锁定该模式，\n按“q”键退出该界面"
+                             ).splitlines()
         prompt_line_num = len(prompt)
-        label_map = {"easy": "简单", "standard": "标准", "medium": "中等",
-                     "hard": "困难"}
+        label_map = {"easy": localize.tr("简单"),
+                     "standard": localize.tr("标准"),
+                     "medium": localize.tr("中等"),
+                     "hard": localize.tr("困难")}
         mode_labels = list(MainGameMap.default_maps.keys())
-        mode_labels.append("自定义")
+        mode_labels.append(localize.tr("自定义"))
         labels = []
         for label in mode_labels[:]:
             new_label = label_map.get(label, label)
@@ -197,7 +203,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         max_label_len = reduce(
             lambda length, label: max(uni_len(label), length), labels, 0)
         label_num = len(labels)
-        keep_prompt = "[{}]锁定模式"
+        keep_prompt = localize.tr("[{}]锁定模式")
         keep_prompt_line_num = len(keep_prompt.splitlines())
         cur_index = 0
 
@@ -219,22 +225,23 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
             item_max_values = {"width": self.width.max_value,
                                "height": self.height.max_value,
                                "max_mine_num": self.max_mine_num.max_value}
-            title = "请输入地图信息，\n"
-            "按Tab键切换输入项，\n"
-            "按Enter键确认输入信息，\n"
-            "按空格键选择是否锁定该模式，\n"
-            "按“q”键退出该页面。".splitlines()
+            title = localize.tr("请输入地图信息，\n"
+                                "按Tab键切换输入项，\n"
+                                "按Enter键确认输入信息，\n"
+                                "按空格键选择是否锁定该模式，\n"
+                                "按“q”键退出该页面。").splitlines()
             title_line_num = len(title)
-            prompt = """\
+            prompt = localize.tr("""\
 地图宽度：[{width}](1-{max_width})
 地图高度：[{height}](1-{max_height})
-地图雷数：[{mine_num}](1-{max_mine_num})"""
+地图雷数：[{mine_num}](1-{max_mine_num})""")
             format_prompt = partial(lambda **kwargs: prompt.format(
                 max_width=self.width.max_value,
                 max_height=self.height.max_value,
                 max_mine_num=self.max_mine_num.max_value, **kwargs))
-            keep_mode_prompt = "[{}]锁定模式"
-            bad_msg = {"size_error": "你的雷数超出地图大小。请重新输入。", "empty": "请输入所有项。"}
+            keep_mode_prompt = localize.tr("[{}]锁定模式")
+            bad_msg = {"size_error": localize.tr("你的雷数超出地图大小。请重新输入。"),
+                       "empty": localize.tr("请输入所有项。")}
             bad_time = 0
             item_count = len(items)
             item_index = 0
@@ -458,7 +465,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
                 self.light_len = 5
                 self.light_speed = 5
                 self.cur_light = 0
-                self.pre_msg = "生成地图中……"
+                self.pre_msg = localize.tr("生成地图中……")
 
             def show_progress(self):
                 start_x = uni_len(self.pre_msg)
@@ -577,7 +584,8 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
 若当前格子周围3x3区域中的其余8个格子的插旗数等于当前格子内数字，可按“t”键翻开此3x3区域中剩余未翻开且未插旗的格子。
 按“p”键暂停游戏，按“q”键退出游戏，按“x”键保存游戏。""".format(mine_num=str(self.mine_num).ljust(num_len(self.max_mine_num)))
         '''
-        self.notice = notice = """剩余雷数：{mine_num}，用时：{time_str}""".format(
+        self.notice = notice = localize.tr("""剩余雷数：{mine_num}，用时：{time_str}"""
+                                           ).format(
             mine_num=str(self.mine_num.get()).ljust(
                 num_len(self.max_mine_num.get())),
             time_str=self.get_time_str())
@@ -659,7 +667,8 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         self.game_paused = False
         self.game_finished = True
         notice_line_num = len(self.notice.splitlines())
-        self.win.addstr(1 + self.map_rows + 2 + notice_line_num, 0, "你输了。",
+        self.win.addstr(1 + self.map_rows + 2 + notice_line_num, 0,
+                        localize.tr("你输了。"),
                         curses.A_NORMAL)
         self.show_time()
         self.ask_for_new_game()
@@ -675,9 +684,9 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         self.game_finished = True
         notice_line_num = len(self.notice.splitlines())
         start_y = 1 + self.map_rows + 2 + notice_line_num
-        self.win.addstr(start_y, 0, "你赢了！", curses.A_NORMAL)
+        self.win.addstr(start_y, 0, localize.tr("你赢了！"), curses.A_NORMAL)
         self.show_time()
-        prompt = "请输入你的名字（默认为Anonymous）："
+        prompt = localize.tr("请输入你的名字（默认为Anonymous）：")
         self.win.addstr(start_y + 2, 0, prompt, curses.A_NORMAL)
         name = self.win.getstr(start_y + 2, uni_len(prompt))
         store_record(self.records, self.width.get(), self.height.get(),
@@ -687,13 +696,14 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
     def show_time(self):
         notice_line_num = len(self.notice.splitlines())
         self.win.addstr(1 + self.map_rows + 2 + notice_line_num + 1, 0,
-                        "你用时{}秒。".format(self.total_time), curses.A_NORMAL)
+                        localize.tr("你用时{}秒。").format(self.total_time),
+                        curses.A_NORMAL)
 
     def ask_for_new_game(self):
         self.win.nodelay(False)
         start_y = 1 + self.map_rows + 1 + len(self.notice.splitlines()) + 4
-        prompt = "是否开启新游戏？(y/n)"
-        bad_msg = "你的选择错误。请按“y”或“n”。"
+        prompt = localize.tr("是否开启新游戏？(y/n)")
+        bad_msg = localize.tr("你的选择错误。请按“y”或“n”。")
         self.win.addstr(start_y, 0, prompt, curses.A_NORMAL)
         while True:
             choice = self.win.getch(start_y, uni_len(prompt))
@@ -798,7 +808,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
             self.record_time()
         if self.game_map[row_num][col_num] not in (COVER, FLAG):
             return
-        bad_msg = "你插旗太多了，电摇你！"
+        bad_msg = localize.tr("你插旗太多了，电摇你！")
         if self.game_map[row_num][col_num] != FLAG:
             if self.mine_num.get() <= 0 and self.real_mine_num.get() > 0:
                 self.win.addstr(
@@ -838,7 +848,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         if update_list:
             self.detect_pos_list.clear()
             self.detect_time = time()
-        
+
         def check_mine(nrow, ncol):
             nonlocal flag_count, detected_mine, update_list
             if self.game_map[nrow][ncol] != FLAG:
@@ -874,8 +884,9 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         if self.game_started:
             self.record_time()
         pause_key = self.keyset["game"]["pause"]
-        msg = "游戏已暂停。按“{}”键以继续游戏。".format(settings.Settings.key_table.get(
-            pause_key, chr(pause_key)))
+        msg = localize.tr("游戏已暂停。按“{}”键以继续游戏。").format(
+            settings.Settings.key_table.get(
+                pause_key, chr(pause_key)))
         if self.game_paused:
             self.win.addstr(
                 1 + self.map_rows + 1 + len(self.notice.splitlines()),
@@ -923,7 +934,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
             self.win.addstr(
                 terminal_size.lines - 1,
                 num_len(self.height.get()) + 1 + num_len(self.width.get()) + 1,
-                "游戏已保存。", curses.A_NORMAL)
+                localize.tr("游戏已保存。"), curses.A_NORMAL)
         elif key == self.keyset["game"]["settings"]:
             if not self.game_paused:
                 self.pause_game()
@@ -974,7 +985,8 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         return super().handleException(exc)
 
 
-def savemap(game_map, mine_map, total_time, remain_blocks, mine_num, max_mine_num, real_mine_num, mine_pos, blank_pos):
+def savemap(game_map, mine_map, total_time, remain_blocks, mine_num,
+            max_mine_num, real_mine_num, mine_pos, blank_pos):
     plain_game_map = []
     for row in game_map:
         plain_game_map.append([])

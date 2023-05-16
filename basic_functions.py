@@ -3,9 +3,18 @@ from functools import reduce
 import os
 import json
 
-uni_len = lambda s: reduce(lambda length, char: length + (2 if ord(char) not in range(128) else 1), s, 0)
-num_len = lambda n: int(log10(n)) + 1
-str_ljust = lambda s, l: ''.join((s, ' ' * (l - uni_len(s))))
+
+def uni_len(s: str):
+    return reduce(lambda length, char: length + (
+        2 if ord(char) not in range(128) else 1), s, 0)
+
+
+def num_len(n: int) -> int:
+    return int(log10(n)) + 1
+
+
+def str_ljust(s: str, length: int) -> str:
+    return ''.join((s, ' ' * (length - uni_len(s))))
 
 
 def loadFile(file_name, default=None):
