@@ -1,6 +1,6 @@
 import os
 
-__version__ = "Build 2023/4/12"
+__version__ = "v1.0.0, Build 2023/5/16"
 program_path = os.path.dirname(__file__)
 error_file = os.path.join(program_path, r"error.log")
 records_file = os.path.join(program_path, r"records.json")
