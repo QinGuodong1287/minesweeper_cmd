@@ -14,6 +14,7 @@ Please click [this link](https://github.com/QinGuodong1287/minesweeper_cmd/relea
 git clone https://github.com/QinGuodong1287/minesweeper_cmd
 ```
 Or download the game manually.
+
 2. Run the following commands to start the game.
 ```bash
 cd minesweeper_cmd/
