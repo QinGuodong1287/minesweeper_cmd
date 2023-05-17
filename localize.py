@@ -1,5 +1,4 @@
 import os
-import glob
 import atexit
 
 import constants
@@ -40,10 +39,10 @@ initializeLocalizeSettings()
 
 
 def current_language():
-    global localize_settings, language_list
+    global localize_settings
     return (
         localize_settings["lang"]
-        if localize_settings["lang"] in language_list
+        if localize_settings["lang"] in localize_settings["support_languages"]
         else localize_settings["default_lang"])
 
 
