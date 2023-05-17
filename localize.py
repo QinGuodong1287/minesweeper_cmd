@@ -27,6 +27,8 @@ def initializeLocalizeSettings():
     default_lang = "zh-CN"
     localize_settings.setdefault("lang", default_lang)
     localize_settings["default_lang"] = default_lang
+    localize_settings["support_languages"] = [
+        "zh-CN"]
     localize_settings.setdefault("log_untranslated_text_flag", False)
     basic_functions.saveFile(lang_index_file, localize_settings)
     lang_data_zh_CN = {}
@@ -35,10 +37,6 @@ def initializeLocalizeSettings():
 
 
 initializeLocalizeSettings()
-language_list = [
-    os.path.basename(filename).split('.')[:-1]
-    for filename in glob.iglob(os.path.join(lang_path, "*.json"))
-    if filename != lang_index_file_basename]
 
 
 def current_language():
