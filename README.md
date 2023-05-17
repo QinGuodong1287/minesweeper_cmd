@@ -4,7 +4,6 @@
 
 ## Latest news
 
-The version v1.0.1 is released!
 Please click [this link](https://github.com/QinGuodong1287/minesweeper_cmd/releases) to see the latest version.
 
 ## Installation
