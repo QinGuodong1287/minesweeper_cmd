@@ -64,10 +64,10 @@ def translate(source_text: str, dictionary: dict) -> str:
 
 untranslated_text_log_file = os.path.join(lang_path, r"untranslated_text.json")
 if os.path.exists(untranslated_text_log_file):
-    untranslated_text_set = set(basic_functions.loadFile(
-        untranslated_text_log_file))
+    untranslated_text_list = list(basic_functions.loadFile(
+            untranslated_text_log_file))
 else:
-    untranslated_text_set = set()
+    untranslated_text_list = []
 
 
 def tr(source_text: str) -> str:
@@ -75,8 +75,12 @@ def tr(source_text: str) -> str:
     global localize_settings, language_data
     if source_text not in language_data:
         if localize_settings["log_untranslated_text_flag"]:
-            global untranslated_text_set
-            untranslated_text_set.add(source_text)
+            global untranslated_text_list
+            text_data = {
+                "text": source_text,
+                "lang": localize_settings["lang"]}
+            if text_data not in untranslated_text_list:
+                untranslated_text_list.append(text_data)
         return source_text
     return language_data[source_text]
 
@@ -87,5 +91,6 @@ def saveLocalizeData():
     basic_functions.saveFile(lang_index_file, localize_settings)
     if localize_settings["log_untranslated_text_flag"]:
         global untranslated_text_set, untranslated_text_log_file
-        basic_functions.saveFile(untranslated_text_log_file,
-                                 list(untranslated_text_set))
+        basic_functions.saveFile(
+            untranslated_text_log_file,
+            untranslated_text_list)
