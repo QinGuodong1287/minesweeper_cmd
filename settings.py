@@ -15,7 +15,8 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
         global settings
         self.settings = settings
         self.options = [
-            {"name": localize.tr("键位设置"), "command": self.setKeyMap}
+            {"name": localize.tr("键位设置"), "command": self.setKeyMap},
+            {"name": localize.tr("语言设置"), "command": self.setLanguage}
         ]
         self.max_name_len = max(self.options,
                                 key=lambda option: uni_len(option["name"]))
@@ -74,6 +75,7 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
             else:
                 return indent * depth + uni_len(
                     translate(geometry, not update)["text"])
+
         cur_y = start_y
 
         def showGeometrySub(geometry, depth=0):
@@ -107,6 +109,7 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
                                 data["attr"])
                 line_num = len(data["text"].splitlines())
                 cur_y += max(line_num, 1)
+
         for geometry in geometries:
             label_width = getColumnWidth(geometry)
             showGeometrySub(geometry)
@@ -129,6 +132,7 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
                 self.cur_index = (self.cur_index + 1) % self.options_len
             elif key == ord('\n'):
                 self.options[self.cur_index]["command"]()
+
         page = [""]
         name_len = reduce(
             lambda length, option: max(uni_len(option["name"]), length),
@@ -170,7 +174,8 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
 
         def bind(*items):
             return partial(bindFunc, *items)
-        key_notice = localize.tr("按左右方向键切换所选方案，按“q”键返回上一级设置。")
+
+        key_notice = localize.tr("按左右方向键切换所选方案，按“q”键保存并返回上一级设置。")
         titles = []
         for index, keys in enumerate(keyset):
             titles.append(partial(
@@ -215,9 +220,46 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
             elif key == curses.KEY_RIGHT:
                 keymap["current_keyset"] = min(keymap["current_keyset"] + 1,
                                                keyset_num - 1)
+
         while keep:
             self.showPage(titles, page, key_notice=key_notice,
                           key_handler=keyHandler, tutor="set_key_map")
+
+    def setLanguage(self):
+        key_notice = localize.tr("按上下方向键切换所选语言，按“q”键保存并返回上一级设置。")
+        page = []
+        lang_index = 0
+
+        def updateLanguageLabel(index):
+            nonlocal lang_index
+            return {
+                "text": localize.localize_settings["support_languages"][index],
+                "attr": (
+                    curses.A_REVERSE
+                    if lang_index == index
+                    else curses.A_NORMAL)}
+
+        for index, lang in enumerate(
+                localize.localize_settings["support_languages"]):
+            if not os.path.exists(os.path.join(
+                localize.lang_path,
+                    "{lang}.json".format(lang=lang))):
+                continue
+            page.append(partial(updateLanguageLabel, index))
+        self.reg_tutor(
+            "set_language",
+            localize.tr("按上下方向键切换语言，\n按“q”键保存所选语言并退出语言设置。"))
+        keep = True
+
+        def keyHandler(key):
+            nonlocal keep
+            if key == ord('q'):
+                keep = False
+                return
+
+        while keep:
+            self.showPage(tuple(), page, key_notice=key_notice,
+                          key_handler=keyHandler, tutor="set_language")
 
 
 def load_settings(settings):
