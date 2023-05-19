@@ -11,6 +11,7 @@ GREEN = 2
 BLUE = 4
 CYAN = 6
 
+
 def init():
     global stdscr
     stdscr = curses.initscr()
@@ -37,16 +38,20 @@ def init():
     global KEY_BACKSPACE
     KEY_BACKSPACE = 127
 
+
 def end():
     global stdscr
     curses.endwin()
     stdscr = None
 
+
 Point = collections.namedtuple("Point", ("x", "y"))
 Size = collections.namedtuple("Size", ("width", "height"))
 
+
 class Widget:
-    def __init__(self, x=None, y=None, width=None, height=None, parent=None, pad_mode=True, **attrs):
+    def __init__(self, x=None, y=None, width=None, height=None, parent=None,
+                 pad_mode=True, **attrs):
         if parent is not None and not isinstance(parent, Widget):
             raise ValueError("The parent window is not a Widget instance.")
         global stdscr
@@ -69,12 +74,26 @@ class Widget:
 
     def __fix_geometry(self):
         self.terminal_size = terminal_size = os.get_terminal_size()
-        self.geometry["x"] = max(int(self.geometry["x"]), 0 if self.pad_mode else -math.inf) if self.geometry["x"] is not None else 0
-        self.geometry["y"] = max(int(self.geometry["y"]), 0 if self.pad_mode else -math.inf) if self.geometry["y"] is not None else 0
-        self.geometry["width"] = max(int(self.geometry["width"]), 1) if self.geometry["width"] is not None else terminal_size.columns
-        self.geometry["height"] = max(int(self.geometry["height"]), 1) if self.geometry["height"] is not None else terminal_size.lines
-        self.geometry["real_x"] = (self.parent.geometry["real_x"] if self.parent is not None and "real_x" in self.parent.geometry else 0) + self.geometry["x"]
-        self.geometry["real_y"] = (self.parent.geometry["real_y"] if self.parent is not None and "real_y" in self.parent.geometry else 0) + self.geometry["y"]
+        self.geometry["x"] = (max(int(self.geometry["x"]),
+                                  0 if self.pad_mode else -math.inf)
+                              if self.geometry["x"] is not None else 0)
+        self.geometry["y"] = (max(int(self.geometry["y"]),
+                                  0 if self.pad_mode else -math.inf)
+                              if self.geometry["y"] is not None else 0)
+        self.geometry["width"] = (max(int(self.geometry["width"]), 1)
+                                  if self.geometry["width"] is not None
+                                  else terminal_size.columns)
+        self.geometry["height"] = (max(int(self.geometry["height"]), 1)
+                                   if self.geometry["height"] is not None
+                                   else terminal_size.lines)
+        self.geometry["real_x"] = ((self.parent.geometry["real_x"]
+                                    if self.parent is not None
+                                    and "real_x" in self.parent.geometry
+                                    else 0) + self.geometry["x"])
+        self.geometry["real_y"] = (self.parent.geometry["real_y"]
+                                   if self.parent is not None
+                                   and "real_y" in self.parent.geometry
+                                   else 0) + self.geometry["y"]
 
     def initWin(self):
         self.__fix_geometry()
@@ -83,13 +102,20 @@ class Widget:
                 return
             del self.win
         global stdscr
-        self.parwin = parwin = stdscr if self.parent is None else self.parent.win
-        parwinpos, parwinsize = parwin.getbegyx(), parwin.getmaxyx()
+        self.parwin = parwin = (stdscr
+                                if self.parent is None
+                                else self.parent.win)
+        # parwinpos, parwinsize = parwin.getbegyx(), parwin.getmaxyx()
         x = min(self.geometry["real_x"], self.terminal_size.columns - 1)
         y = min(self.geometry["real_y"], self.terminal_size.lines - 1)
-        width = min(self.geometry["width"], self.terminal_size.columns - x) if self.geometry["width"] is not None else self.terminal_size.columns
-        height = min(self.geometry["height"], self.terminal_size.lines - y) if self.geometry["height"] is not None else self.terminal_size.lines
-        self.win = (curses.newpad if self.pad_mode else curses.newwin)(height, width, y, x)
+        width = (min(self.geometry["width"], self.terminal_size.columns - x)
+                 if self.geometry["width"] is not None
+                 else self.terminal_size.columns)
+        height = (min(self.geometry["height"], self.terminal_size.lines - y)
+                  if self.geometry["height"] is not None
+                  else self.terminal_size.lines)
+        self.win = (curses.newpad if self.pad_mode else curses.newwin)(
+            height, width, y, x)
         self.win.overwrite(parwin)
         self.win.erase()
         self.win.refresh()
@@ -101,15 +127,25 @@ class Widget:
     def updateWin(self):
         self.terminal_size = os.get_terminal_size()
         self.__fix_geometry()
-        parwinpos, parwinsize = self.parwin.getbegyx(), self.parwin.getmaxyx()
-        x = min(max(self.geometry["real_x"], 0), self.terminal_size.columns - 1)
-        last_x = min(max(self.last_geometry["real_x"], 0), self.terminal_size.columns - 1)
+        # parwinpos, parwinsize = self.parwin.getbegyx(),
+        #     self.parwin.getmaxyx()
+        x = min(max(self.geometry["real_x"], 0),
+                self.terminal_size.columns - 1)
+        last_x = min(max(self.last_geometry["real_x"], 0),
+                     self.terminal_size.columns - 1)
         y = min(max(self.geometry["real_y"], 0), self.terminal_size.lines - 1)
-        last_y = min(max(self.last_geometry["real_y"], 0), self.terminal_size.lines - 1)
+        last_y = min(max(self.last_geometry["real_y"], 0),
+                     self.terminal_size.lines - 1)
         self.win.erase()
-        self.win.resize(min(self.geometry["height"], self.terminal_size.lines - max(y, last_y)), min(self.geometry["width"], self.terminal_size.columns - max(x, last_x)))
+        self.win.resize(min(self.geometry["height"],
+                            self.terminal_size.lines - max(y, last_y)),
+                        min(self.geometry["width"],
+                            self.terminal_size.columns - max(x, last_x)))
         self.win.mvwin(y, x)
-        self.win.resize(min(self.geometry["height"], self.terminal_size.lines - y), min(self.geometry["width"], self.terminal_size.columns - x))
+        self.win.resize(min(self.geometry["height"],
+                            self.terminal_size.lines - y),
+                        min(self.geometry["width"],
+                            self.terminal_size.columns - x))
         self.last_geometry.update(self.geometry)
         self.win.touchwin()
         self.win.refresh()
@@ -124,7 +160,8 @@ class Widget:
         elif isinstance(parent, curses.window):
             pary, parx = parent.getbegyx()
         else:
-            raise ValueError("The window is not a Widget or curses.window object.")
+            raise ValueError(
+                "The window is not a Widget or curses.window object.")
         return Point(x=x - parx, y=y - pary)
 
     @classmethod
@@ -135,7 +172,8 @@ class Widget:
         elif isinstance(parent, curses.window):
             pary, parx = parent.getbegyx()
         else:
-            raise ValueError("The window is not a Widget or curses.window object.")
+            raise ValueError(
+                "The window is not a Widget or curses.window object.")
         return Point(x=parx + x, y=pary + y)
 
     def move(self, x=None, y=None):
@@ -147,7 +185,8 @@ class Widget:
     def getPos(self):
         parx = self.parent.geometry["real_x"]
         pary = self.parent.geometry["real_y"]
-        return Point(x=(parx if not self.pad_mode else 0) + self.geometry["x"], y=(pary if not self.pad_mode else 0) + self.geometry["y"])
+        return Point(x=(parx if not self.pad_mode else 0) + self.geometry["x"],
+                     y=(pary if not self.pad_mode else 0) + self.geometry["y"])
 
     def resize(self, width=None, height=None):
         self.geometry["width"] = width
@@ -156,9 +195,10 @@ class Widget:
         self.repaint = True
 
     def getSize(self):
-        return Size(width=self.geometry["width"], height=self.geometry["height"])
+        return Size(width=self.geometry["width"],
+                    height=self.geometry["height"])
 
-    def setAttr(**attrs):
+    def setAttr(self, **attrs):
         self.attrs.update(attrs)
 
     def refresh(self):
@@ -166,7 +206,7 @@ class Widget:
 
     def close(self):
         self.running = False
-    
+
     def showWin(self, show=True):
         if show:
             self.show = True
@@ -201,7 +241,10 @@ class Widget:
     def drawBorder(self):
         borders = self.__getBorder()
         if borders:
-            self.win.border(borders.get("ls", 0), borders.get("rs", 0), borders.get("ts", 0), borders.get("bs", 0), borders.get("tl", 0), borders.get("tr", 0), borders.get("bl", 0), borders.get("br", 0))
+            self.win.border(borders.get("ls", 0), borders.get("rs", 0),
+                            borders.get("ts", 0), borders.get("bs", 0),
+                            borders.get("tl", 0), borders.get("tr", 0),
+                            borders.get("bl", 0), borders.get("br", 0))
 
     def doModel(self):
         if not self.error:
@@ -264,6 +307,7 @@ class Widget:
             self.children.pop().forceClose()
         if hasattr(self, "win") and self.win is not None:
             self.win.erase()
+            self.win.refresh()
         del self.win
         self.win = None
         del self.parwin
@@ -277,6 +321,8 @@ class Widget:
     def eventloop(self):
         self.refresh()
 
+
 class Window(Widget):
-    def __init__(self, x=None, y=None, width=None, height=None, parent=None, **attrs):
+    def __init__(self, x=None, y=None, width=None, height=None, parent=None,
+                 **attrs):
         super().__init__(x, y, width, height, parent, False, **attrs)
