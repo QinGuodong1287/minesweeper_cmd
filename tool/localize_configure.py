@@ -97,7 +97,7 @@ def translateText():
         untranslated_text = untranslated_text_list[index]["text"]
         print("The text is {}.".format(repr(untranslated_text)))
         translated_text = input("Please enter the translated text:\n")
-        translated_text = eval(repr(translated_text))
+        translated_text = eval(repr(translated_text).replace('\\\\', '\\'))
         untranslated_text_dict[lang][untranslated_text] = translated_text
         if not askYesOrNo("Do you want to translate another text?"):
             break
