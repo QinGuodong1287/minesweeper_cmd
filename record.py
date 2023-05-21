@@ -63,9 +63,11 @@ class RecordPage(graphics.Window):
         for index, record in enumerate(self.records.get(label, [])):
             self.win.addstr(2 + index + 1, record_time_start_x,
                             record.get("record_time", ''), curses.A_NORMAL)
+        key_notice = localize.tr(
+            "按上下方向键切换要查看排行榜的模式，按“h”键切换用时显示方式，按“q”键退出排行榜。")
         self.win.addstr(
             terminal_size.lines - 1, 0,
-            localize.tr("按上下方向键切换要查看排行榜的模式，按“h”键切换用时显示方式，按“q”键退出排行榜。"),
+            key_notice,
             curses.A_NORMAL)
         self.refresh()
         key = self.win.getch(terminal_size.lines - 1,

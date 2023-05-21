@@ -30,7 +30,7 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
                  update=True, tutor=None):
         self.win.erase()
         terminal_size = os.get_terminal_size()
-        self.win.addstr(0, 0, "游戏设置", curses.A_NORMAL)
+        self.win.addstr(0, 0, localize.tr("游戏设置"), curses.A_NORMAL)
         if key_notice is None:
             key_notice = self.default_key_notice
         else:
