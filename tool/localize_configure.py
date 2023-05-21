@@ -1,10 +1,12 @@
 import os
 import json
 import sys
+import readline
 
 import tool_constants
 
 print("Initializing tool ...")
+readline.clear_history()
 with open(os.path.join(tool_constants.lang_path,
                        r"untranslated_text.json")) as log:
     untranslated_text_list = json.load(log)
