@@ -225,6 +225,11 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
             self.showPage(titles, page, key_notice=key_notice,
                           key_handler=keyHandler, tutor="set_key_map")
 
+    language_table = {
+        "zh-CN": "简体中文",
+        "en": "English"
+    }
+
     def setLanguage(self):
         key_notice = localize.tr("按上下方向键切换所选语言，按“q”键保存并返回上一级设置。")
         page = []
@@ -232,8 +237,13 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
 
         def updateLanguageLabel(index):
             nonlocal lang_index
+            lang = localize.localize_settings["support_languages"][index]
             return {
-                "text": localize.localize_settings["support_languages"][index],
+                "text": "{code}{label}".format(
+                    code=lang,
+                    label=(" ({})".format(Settings.language_table[lang])
+                           if lang in Settings.language_table
+                           else '')),
                 "attr": (
                     curses.A_REVERSE
                     if lang_index == index
