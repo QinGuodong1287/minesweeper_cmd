@@ -82,7 +82,8 @@ else:
 def tr(source_text: str) -> str:
     source_text = str(source_text)
     global localize_settings, language_data
-    if source_text not in language_data:
+    translated_text = language_data.get(source_text, '')
+    if not translated_text.strip():
         if localize_settings["log_untranslated_text_flag"]:
             global untranslated_text_list
             text_data = {
@@ -91,7 +92,7 @@ def tr(source_text: str) -> str:
             if text_data not in untranslated_text_list:
                 untranslated_text_list.append(text_data)
         return source_text
-    return language_data[source_text]
+    return translated_text
 
 
 @atexit.register
