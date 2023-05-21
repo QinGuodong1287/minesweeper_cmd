@@ -171,10 +171,6 @@ map.json
 # Logs.
 error.log
 
-# Lanaugage files.
-# Untranslated text file.
-lang/untranslated_text.json
-
 # Other ignored files.
 legacy/*
 test/*

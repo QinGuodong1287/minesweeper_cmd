@@ -1,0 +1,554 @@
+[
+    {
+        "text": "游戏教程",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "上方向键",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "下方向键",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "左方向键",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "右方向键",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "欢迎来到扫雷。\n按上下方向键选择操作，按Enter键执行所选操作。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "开始新游戏",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "打开游戏设置",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "查看排行榜",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "打开游戏教程",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "关于游戏",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "退出游戏",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "关于 扫雷\n作者：Qin Guodong <qinguodong07@qq.com>\n版本 {version}\ncurses 版本：{curses_version}\nncurses 库版本：{ncurses_version}",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "关于",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按“q”键退出该页面。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "欢迎来到扫雷游戏教程。按Enter键进入教程，按“q”键退出教程。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "排行榜",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "模式",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "记录",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "名字",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "用时",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "记录时间",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按上下方向键切换要查看排行榜的模式，按“h”键切换用时显示方式，按“q”键退出排行榜。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "键位设置",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按上下键切换所选设置，按Enter键打开所选设置，按“q”键退出设置。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按上下方向键选择所玩模式，按空格键可锁定模式。\n“自定义”模式可以自定义地图大小及雷数，\n“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "请输入地图宽度、高度和雷数。\n按Tab键切换输入项。\n按Enter键确认输入的地图信息。\n“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "地图符号：\n        #：未翻开的格子。\n     空格：已翻开的格子。\n        *：雷。\n数字(1-9)：格子周围3x3范围内其余8个格子中含有的雷数。\n        F：插旗。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "请按上下方向键选择模式，\n按空格键选择是否锁定该模式，\n按“q”键退出该界面",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "简单",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "标准",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "中等",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "困难",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "自定义",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "[{}]锁定模式",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "请输入地图信息，\n按Tab键切换输入项，\n按Enter键确认输入信息，\n按空格键选择是否锁定该模式，\n按“q”键退出该页面。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "地图宽度：[{width}](1-{max_width})\n地图高度：[{height}](1-{max_height})\n地图雷数：[{mine_num}](1-{max_mine_num})",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "你的雷数超出地图大小。请重新输入。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "请输入所有项。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "如需启动游戏，可输入“python3 {}”并按Enter键。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按左右方向键切换所选方案，按“q”键返回上一级设置。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "移动",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "上",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "下",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "左",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "右",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "操作",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "翻开格子",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "标记格子（插旗）",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "翻开3x3范围内格子",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "游戏流程",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "暂停游戏",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "保存游戏",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按左右方向键切换按键方案，\n按“q”键保存所选键位方案并退出键位设置。\n请记住所选键位方案。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "为了更好地畅玩扫雷，建议你查看键位设置。\n是否现在打开键位设置？(y/n)",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "你的选择错误。请按“y”或“n”。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "正在生成地图……",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "生成地图中……",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "剩余雷数：{mine_num}，用时：{time_str}",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "如果忘记键位或想切换键位方案，可按{}打开设置。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "你输了。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "你用时{}秒。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "是否开启新游戏？(y/n)",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "你插旗太多了，电摇你！",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "你赢了！",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "请输入你的名字（默认为Anonymous）：",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "秒",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "语言设置",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按上下方向键切换语言，\n按“q”键保存所选语言并退出语言设置。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按上下方向键切换所选语言，按“q”键保存并返回上一级设置。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "抱歉，该游戏出现错误。是否重新启动游戏？(y/n)",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "游戏已暂停。按“{}”键以继续游戏。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按左右方向键切换所选方案，按“q”键保存并返回上一级设置。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "游戏已保存。",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "抱歉，该游戏出现错误。是否重新启动游戏？(y/n) ",
+        "lang": "zh-CN"
+    },
+    {
+        "text": "按上下方向键切换所选语言，按“q”键保存并返回上一级设置。",
+        "lang": "en"
+    },
+    {
+        "text": "按上下方向键切换语言，\n按“q”键保存所选语言并退出语言设置。",
+        "lang": "en"
+    },
+    {
+        "text": "开始新游戏",
+        "lang": "en"
+    },
+    {
+        "text": "打开游戏设置",
+        "lang": "en"
+    },
+    {
+        "text": "查看排行榜",
+        "lang": "en"
+    },
+    {
+        "text": "打开游戏教程",
+        "lang": "en"
+    },
+    {
+        "text": "关于游戏",
+        "lang": "en"
+    },
+    {
+        "text": "退出游戏",
+        "lang": "en"
+    },
+    {
+        "text": "如需启动游戏，可输入“python3 {}”并按Enter键。",
+        "lang": "en"
+    },
+    {
+        "text": "游戏教程",
+        "lang": "en"
+    },
+    {
+        "text": "上方向键",
+        "lang": "en"
+    },
+    {
+        "text": "下方向键",
+        "lang": "en"
+    },
+    {
+        "text": "左方向键",
+        "lang": "en"
+    },
+    {
+        "text": "右方向键",
+        "lang": "en"
+    },
+    {
+        "text": "欢迎来到扫雷。\n按上下方向键选择操作，按Enter键执行所选操作。",
+        "lang": "en"
+    },
+    {
+        "text": "键位设置",
+        "lang": "en"
+    },
+    {
+        "text": "语言设置",
+        "lang": "en"
+    },
+    {
+        "text": "按上下键切换所选设置，按Enter键打开所选设置，按“q”键退出设置。",
+        "lang": "en"
+    },
+    {
+        "text": "关于 扫雷\n作者：Qin Guodong <qinguodong07@qq.com>\n版本 {version}\ncurses 版本：{curses_version}\nncurses 库版本：{ncurses_version}",
+        "lang": "en"
+    },
+    {
+        "text": "关于",
+        "lang": "en"
+    },
+    {
+        "text": "按“q”键退出该页面。",
+        "lang": "en"
+    },
+    {
+        "text": "排行榜",
+        "lang": "en"
+    },
+    {
+        "text": "模式",
+        "lang": "en"
+    },
+    {
+        "text": "记录",
+        "lang": "en"
+    },
+    {
+        "text": "名字",
+        "lang": "en"
+    },
+    {
+        "text": "用时",
+        "lang": "en"
+    },
+    {
+        "text": "秒",
+        "lang": "en"
+    },
+    {
+        "text": "记录时间",
+        "lang": "en"
+    },
+    {
+        "text": "按上下方向键切换要查看排行榜的模式，按“h”键切换用时显示方式，按“q”键退出排行榜。",
+        "lang": "en"
+    },
+    {
+        "text": "按左右方向键切换所选方案，按“q”键保存并返回上一级设置。",
+        "lang": "en"
+    },
+    {
+        "text": "移动",
+        "lang": "en"
+    },
+    {
+        "text": "上",
+        "lang": "en"
+    },
+    {
+        "text": "下",
+        "lang": "en"
+    },
+    {
+        "text": "左",
+        "lang": "en"
+    },
+    {
+        "text": "右",
+        "lang": "en"
+    },
+    {
+        "text": "操作",
+        "lang": "en"
+    },
+    {
+        "text": "翻开格子",
+        "lang": "en"
+    },
+    {
+        "text": "标记格子（插旗）",
+        "lang": "en"
+    },
+    {
+        "text": "翻开3x3范围内格子",
+        "lang": "en"
+    },
+    {
+        "text": "游戏流程",
+        "lang": "en"
+    },
+    {
+        "text": "暂停游戏",
+        "lang": "en"
+    },
+    {
+        "text": "保存游戏",
+        "lang": "en"
+    },
+    {
+        "text": "按左右方向键切换按键方案，\n按“q”键保存所选键位方案并退出键位设置。\n请记住所选键位方案。",
+        "lang": "en"
+    },
+    {
+        "text": "按上下方向键选择所玩模式，按空格键可锁定模式。\n“自定义”模式可以自定义地图大小及雷数，\n“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。",
+        "lang": "en"
+    },
+    {
+        "text": "请输入地图宽度、高度和雷数。\n按Tab键切换输入项。\n按Enter键确认输入的地图信息。\n“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。",
+        "lang": "en"
+    },
+    {
+        "text": "地图符号：\n        #：未翻开的格子。\n     空格：已翻开的格子。\n        *：雷。\n数字(1-9)：格子周围3x3范围内其余8个格子中含有的雷数。\n        F：插旗。",
+        "lang": "en"
+    },
+    {
+        "text": "请按上下方向键选择模式，\n按空格键选择是否锁定该模式，\n按“q”键退出该界面",
+        "lang": "en"
+    },
+    {
+        "text": "简单",
+        "lang": "en"
+    },
+    {
+        "text": "标准",
+        "lang": "en"
+    },
+    {
+        "text": "中等",
+        "lang": "en"
+    },
+    {
+        "text": "困难",
+        "lang": "en"
+    },
+    {
+        "text": "自定义",
+        "lang": "en"
+    },
+    {
+        "text": "[{}]锁定模式",
+        "lang": "en"
+    },
+    {
+        "text": "请输入地图信息，\n按Tab键切换输入项，\n按Enter键确认输入信息，\n按空格键选择是否锁定该模式，\n按“q”键退出该页面。",
+        "lang": "en"
+    },
+    {
+        "text": "地图宽度：[{width}](1-{max_width})\n地图高度：[{height}](1-{max_height})\n地图雷数：[{mine_num}](1-{max_mine_num})",
+        "lang": "en"
+    },
+    {
+        "text": "你的雷数超出地图大小。请重新输入。",
+        "lang": "en"
+    },
+    {
+        "text": "请输入所有项。",
+        "lang": "en"
+    },
+    {
+        "text": "正在生成地图……",
+        "lang": "en"
+    },
+    {
+        "text": "生成地图中……",
+        "lang": "en"
+    },
+    {
+        "text": "剩余雷数：{mine_num}，用时：{time_str}",
+        "lang": "en"
+    },
+    {
+        "text": "抱歉，该游戏出现错误。是否重新启动游戏？(y/n) ",
+        "lang": "en"
+    },
+    {
+        "text": "游戏设置",
+        "lang": "en"
+    },
+    {
+        "text": "游戏设置",
+        "lang": "zh-CN"
+    }
+]
