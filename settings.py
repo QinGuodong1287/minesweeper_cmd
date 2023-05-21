@@ -233,7 +233,8 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
     def setLanguage(self):
         key_notice = localize.tr("按上下方向键切换所选语言，按“q”键保存并返回上一级设置。")
         page = []
-        lang_index = 0
+        lang_index = localize.localize_settings["support_languages"].index(
+            localize.current_language())
 
         def updateLanguageLabel(index):
             nonlocal lang_index
@@ -262,14 +263,22 @@ class Settings(tutorial.GameTutorialMixin, graphics.Window):
         keep = True
 
         def keyHandler(key):
-            nonlocal keep
+            nonlocal keep, lang_index
             if key == ord('q'):
                 keep = False
                 return
+            languages_num = len(
+                localize.localize_settings["support_languages"])
+            if key == curses.KEY_UP:
+                lang_index = (lang_index - 1) % languages_num
+            elif key == curses.KEY_DOWN:
+                lang_index = (lang_index + 1) % languages_num
 
         while keep:
             self.showPage(tuple(), page, key_notice=key_notice,
                           key_handler=keyHandler, tutor="set_language")
+        localize.switchLanguage(
+            localize.localize_settings["support_languages"][lang_index])
 
 
 def load_settings(settings):

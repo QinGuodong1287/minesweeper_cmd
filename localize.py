@@ -27,7 +27,12 @@ def initializeLocalizeSettings():
     localize_settings.setdefault("lang", default_lang)
     localize_settings["default_lang"] = default_lang
     localize_settings["support_languages"] = [
-        "zh-CN"]
+        "zh-CN",
+        "en"]
+    for lang in localize_settings["support_languages"]:
+        lang_file = os.path.join(lang_path, "{lang}.json".format(lang=lang))
+        if not os.path.exists(lang_file):
+            basic_functions.saveFile(lang_file, {})
     localize_settings.setdefault("log_untranslated_text_flag", False)
     basic_functions.saveFile(lang_index_file, localize_settings)
 
@@ -46,6 +51,16 @@ def current_language():
 language_data = {}
 basic_functions.loadDict(os.path.join(lang_path, "{lang}.json".format(
     lang=current_language())), language_data)
+
+
+def switchLanguage(new_lang: str):
+    new_lang = str(new_lang)
+    global localize_settings, language_data, lang_path
+    localize_settings["lang"] = new_lang
+    lang_file = os.path.join(lang_path, "{lang}.json".format(lang=new_lang))
+    if os.path.exists(lang_file):
+        language_data.clear()
+        basic_functions.loadDict(lang_file, language_data)
 
 
 def translate(source_text: str, dictionary: dict) -> str:
