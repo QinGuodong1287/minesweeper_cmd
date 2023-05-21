@@ -65,7 +65,7 @@ def printTextTable():
     for lang, text_list in untranslated_text_dict.items():
         print("{}:".format(lang))
         for index, text in enumerate(text_list, 1):
-            print("\t{num}.{text}".format(num=index, text=text))
+            print("\t{num}.{text}".format(num=index, text=repr(text)))
 
 
 def printLanguages():
