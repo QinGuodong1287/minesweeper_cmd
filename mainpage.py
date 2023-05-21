@@ -36,7 +36,7 @@ class Minesweeper(tutorial.GameTutorialMixin, graphics.Window):
         self.options.append({"name": localize.tr("查看排行榜"),
                              "command": self.show_record})
         self.options.append({"name": localize.tr("打开游戏教程"),
-                             "command": self.show_tutorial, "active": True})
+                             "command": self.show_tutorial})
         self.options.append({"name": localize.tr("关于游戏"),
                              "command": self.about_game})
         self.options.append({"name": localize.tr("退出游戏"),
@@ -56,9 +56,9 @@ class Minesweeper(tutorial.GameTutorialMixin, graphics.Window):
             self.win.addstr(start_y + line_num,
                             (terminal_size.columns - uni_len(line)) // 2, line,
                             curses.A_NORMAL)
-        option_name_len = max([uni_len(option["name"])
-                               for option in self.options])
-        + num_len(option_len) + 1
+        option_name_len = (max([uni_len(option["name"])
+                                for option in self.options])
+                           + num_len(option_len) + 1)
         left_x = (terminal_size.columns - option_name_len) // 2
         for index, option in enumerate(self.options):
             self.win.addstr(
