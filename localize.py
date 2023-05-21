@@ -30,9 +30,6 @@ def initializeLocalizeSettings():
         "zh-CN"]
     localize_settings.setdefault("log_untranslated_text_flag", False)
     basic_functions.saveFile(lang_index_file, localize_settings)
-    lang_data_zh_CN = {}
-    basic_functions.saveFile(os.path.join(lang_path, "{lang}.json".format(
-        lang=default_lang)), lang_data_zh_CN)
 
 
 initializeLocalizeSettings()
