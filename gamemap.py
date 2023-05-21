@@ -216,6 +216,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
             def show_cursor(x, y):
                 nonlocal custom_win
                 custom_win.addch(y, x, ' ', curses.A_REVERSE)
+
             custom_win.erase()
             item_names = ["width", "height", "max_mine_num"]
             items = {"width": 0, "height": 0, "max_mine_num": 0}
@@ -235,6 +236,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
 地图宽度：[{width}](1-{max_width})
 地图高度：[{height}](1-{max_height})
 地图雷数：[{mine_num}](1-{max_mine_num})""")
+            input_box_symbol = '['
             format_prompt = partial(lambda **kwargs: prompt.format(
                 max_width=self.width.max_value,
                 max_height=self.height.max_value,
@@ -284,8 +286,12 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
                     item_start_y + item_count,
                     (terminal_size.columns - uni_len(keep_prompt)) // 2,
                     keep_prompt, curses.A_NORMAL)
+                input_box_symbol_index = prompt_lines[item_index].index(
+                    input_box_symbol)
+                text_width = uni_len(
+                    prompt_lines[item_index][:input_box_symbol_index]) + 1
                 show_cursor(
-                    start_x + 11 + (
+                    start_x + text_width + (
                         num_len(items[item_names[item_index]])
                         if items[item_names[item_index]] > 0 else 0),
                     item_start_y + item_index)
@@ -378,6 +384,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
                 else:
                     if not set_custom_mode():
                         break
+
         self.game_map.clear()
         self.mine_map.clear()
         for i in range(self.height.get()):
@@ -505,6 +512,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
             def step(self):
                 self.current = min(self.current + 1, self.total)
                 self.show_progress()
+
         bar = ProgressBar(self.win, 0, self.width.get() * self.height.get())
         for row_num, row in enumerate(self.mine_map):
             for col_num, block in enumerate(row):
