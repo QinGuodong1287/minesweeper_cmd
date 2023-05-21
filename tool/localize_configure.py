@@ -2,108 +2,157 @@ import os
 import json
 import sys
 
-import constants
+import tool_constants
 
 print("Initializing tool ...")
-with open(os.path.join(constants.lang_path, r"untranslated_text.json")) as log:
+with open(os.path.join(tool_constants.lang_path,
+                       r"untranslated_text.json")) as log:
     untranslated_text_list = json.load(log)
 untranslated_text_dict = {}
 for item in untranslated_text_list:
     untranslated_text_dict.setdefault(item["lang"], {})
     untranslated_text_dict[item["lang"]][item["text"]] = ""
 for lang in untranslated_text_dict.keys():
-    lang_file = os.path.join(constants.lang_path, "{lang}.json".format(
+    lang_file = os.path.join(tool_constants.lang_path, "{lang}.json".format(
         lang=lang))
     if not os.path.exists(lang_file):
         continue
     with open(lang_file) as file:
         untranslated_text_dict[lang].update(json.load(file))
-while True:
-    try:
-        op = int(input(
-            "Please choose an operation (enter the number):\n"
-            "0. Exit the tool.\n"
-            "1. Print the table.\n"
-            "2. Translate a text.\n"
-            "3. Retain all texts.\n").lower())
-    except ValueError:
-        print("Your choice is invaild. Please try again.", file=sys.stderr)
-        continue
-    if op == 0:
-        break
-    if op == 1:
-        print("===== The untranslated text table =====")
-        for lang, text_list in untranslated_text_dict.items():
-            print("{}:".format(lang))
-            for index, text in enumerate(text_list, 1):
-                print("\t{num}.{text}".format(num=index, text=text))
-    elif op == 2:
-        while True:
-            try:
+with open(os.path.join(tool_constants.lang_path, "lang.json")) as settings:
+    supported_languages = json.load(settings)["support_languages"]
+
+
+def askYesOrNo(prompt: str = "", default: bool = True,
+               retry: bool = True) -> bool:
+    prompt = str(prompt)
+    if prompt:
+        if "(y/n)" not in prompt.lower():
+            choice = "({yes}/{no})".format(
+                yes='Y' if default else 'y',
+                no='N' if not default else 'n')
+            prompt = ' '.join((prompt, choice, ''))
+    else:
+        prompt = "Please enter y or n: "
+    default = bool(default)
+    while True:
+        user_input = input(prompt).lower()
+        if not user_input:
+            res = default
+            break
+        if user_input in ('y', 'n'):
+            res = user_input == 'y'
+            break
+        if not retry:
+            res = False
+            break
+        print("Your input is invaild. Please enter y or n.",
+              file=sys.stderr)
+    return res
+
+
+running = True
+
+
+def exitTool():
+    global running
+    running = False
+
+
+def printTextTable():
+    global untranslated_text_dict
+    print("===== The untranslated text table =====")
+    for lang, text_list in untranslated_text_dict.items():
+        print("{}:".format(lang))
+        for index, text in enumerate(text_list, 1):
+            print("\t{num}.{text}".format(num=index, text=text))
+
+
+def printLanguages():
+    global supported_languages
+    print("===== The supported languages list =====")
+    for index, lang in enumerate(supported_languages, 1):
+        print(f"{index}. {lang}")
+
+
+def translateText():
+    global untranslated_text_dict, untranslated_text_list
+    keep_lang = False
+    while True:
+        try:
+            if not keep_lang:
                 lang = input("Please enter the language: ")
                 if lang not in untranslated_text_dict.keys():
                     raise ValueError
-                index = int(input("Please enter the number of the text: ")) - 1
-                if not (0 <= index < len(untranslated_text_dict[lang])):
-                    raise ValueError
-            except ValueError:
-                print("Your input is invaild. Translation is aborted.",
-                      file=sys.stderr)
-                break
-            untranslated_text = untranslated_text_list[index]["text"]
-            print("The text is {}.".format(repr(untranslated_text)))
-            translated_text = input("Please enter the translated text:\n")
-            translated_text = eval(repr(translated_text))
-            untranslated_text_dict[lang][untranslated_text] = translated_text
-            while True:
-                choice = (input(
-                    "Do you want to translate another text? (Y/n) ")
-                    .lower())
-                if choice:
-                    if choice not in ('y', 'n'):
-                        print(
-                            "Sorry, your choice is invaild. "
-                            "Please enter y or n.",
-                            file=sys.stderr)
-                    else:
-                        break
-                else:
-                    break
-            if choice == 'n':
-                break
-    elif op == 3:
-        lang = input("Please enter the language: ")
-        if lang not in untranslated_text_dict.keys():
+                keep_lang = askYesOrNo("Keep this language?")
+            index = int(input("Please enter the number of the text: ")) - 1
+            if not (0 <= index < len(untranslated_text_dict[lang])):
+                raise ValueError
+        except ValueError:
             print("Your input is invaild. Translation is aborted.",
                   file=sys.stderr)
-            continue
-        while True:
-            choice = input("Retain all texts? (y/N)").lower()
-            if not choice:
-                break
-            if choice == 'y':
-                for text in untranslated_text_dict[lang].keys():
-                    untranslated_text_dict[lang][text] = text
-                break
-            elif choice == 'n':
-                break
-            else:
-                print("Your choice is invaild. Please try enter y or n.",
-                      file=sys.stderr)
-    else:
+            break
+        untranslated_text = untranslated_text_list[index]["text"]
+        print("The text is {}.".format(repr(untranslated_text)))
+        translated_text = input("Please enter the translated text:\n")
+        translated_text = eval(repr(translated_text))
+        untranslated_text_dict[lang][untranslated_text] = translated_text
+        if not askYesOrNo("Do you want to translate another text?"):
+            break
+
+
+def retainAllTexts():
+    global untranslated_text_dict
+    lang = input("Please enter the language: ")
+    if lang not in untranslated_text_dict.keys():
+        print("Your input is invaild. Translation is aborted.",
+              file=sys.stderr)
+        return
+    if askYesOrNo("Retain all texts?"):
+        for text in untranslated_text_dict[lang].keys():
+            untranslated_text_dict[lang][text] = text
+
+
+tool_cases = [
+    {
+        "label": "Exit the tool.",
+        "target": exitTool
+    },
+    {
+        "label": "Print the text table.",
+        "target": printTextTable
+    },
+    {
+        "label": "Print supported languages.",
+        "target": printLanguages
+    },
+    {
+        "label": "Translate a text.",
+        "target": translateText
+    },
+    {
+        "label": "Retain all texts.",
+        "target": retainAllTexts
+    }]
+tool_cases_num = len(tool_cases)
+while running:
+    try:
+        print()
+        for index, case in enumerate(tool_cases):
+            print("{}.".format(index), case["label"])
+        op = int(input())
+        if not (0 <= op < tool_cases_num):
+            raise ValueError
+    except ValueError:
         print("Your choice is invaild. Please try again.", file=sys.stderr)
-choice = input("Save translation data? (Y/n)").lower()
-if choice:
-    if choice == 'y':
-        save = True
-    else:
-        save = False
-else:
-    save = True
-if save:
+        continue
+    print()
+    tool_cases[op]["target"]()
+if askYesOrNo("Save translation data?"):
     print("Saving translate data ...")
     for lang, lang_data in untranslated_text_dict.items():
         with open(
-            os.path.join(constants.lang_path, "{lang}.json".format(lang=lang)),
+            os.path.join(tool_constants.lang_path,
+                         "{lang}.json".format(lang=lang)),
                 'w') as data:
             json.dump(lang_data, data, ensure_ascii=False, indent=4)
