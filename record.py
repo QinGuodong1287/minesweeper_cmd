@@ -1,5 +1,5 @@
 from functools import reduce
-from time import ctime
+from time import ctime, time
 import os
 import curses
 
@@ -17,6 +17,9 @@ class RecordPage(graphics.Window):
             read_records(self.records)
         self.label_index = 0
         self.format_time = False
+        self.win.nodelay(True)
+
+        self.start_time = time()
 
     def eventloop(self):
         self.win.erase()
@@ -64,10 +67,18 @@ class RecordPage(graphics.Window):
             self.win.addstr(2 + index + 1, record_time_start_x,
                             record.get("record_time", ''), curses.A_NORMAL)
         key_notice = localize.tr(
-            "按上下方向键切换要查看排行榜的模式，按“h”键切换用时显示方式，按“q”键退出排行榜。")
+            "按上下方向键切换要查看排行榜的模式，\n"
+            "按“h”键切换用时显示方式，\n"
+            "按“q”键退出排行榜。")
+        key_notice_lines = key_notice.splitlines()
+        wait_seconds = 3
+        if time() - self.start_time > wait_seconds * len(key_notice_lines):
+            self.start_time = time()
+        index = (int((time() - self.start_time) / wait_seconds) %
+                 len(key_notice_lines))
         self.win.addstr(
             terminal_size.lines - 1, 0,
-            key_notice,
+            key_notice_lines[index],
             curses.A_NORMAL)
         self.refresh()
         key = self.win.getch(terminal_size.lines - 1,
