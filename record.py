@@ -33,15 +33,19 @@ class RecordPage(graphics.Window):
                             curses.A_REVERSE
                             if index == self.label_index
                             else curses.A_NORMAL)
+        page_columns = (
+            localize.tr("名字"),
+            localize.tr("用时"),
+            localize.tr("记录时间"))
         self.win.addstr(1, label_len + 1, localize.tr("记录"), curses.A_NORMAL)
-        self.win.addstr(2, label_len + 1, localize.tr("名字"), curses.A_NORMAL)
+        self.win.addstr(2, label_len + 1, page_columns[0], curses.A_NORMAL)
         labels = list(self.records.keys())
         label = labels[self.label_index] if labels else ''
         name_len = reduce(
             lambda length, record: max(length, uni_len(record["name"])),
             self.records.get(label, []), 0)
         self.win.addstr(2, label_len + 1 + max(name_len, 4) + 1,
-                        localize.tr("用时"), curses.A_NORMAL)
+                        page_columns[1], curses.A_NORMAL)
         time_start_x = label_len + 1 + max(name_len, 4) + 1
         time_len = 4
         for index, record in enumerate(self.records.get(label, [])):
@@ -60,8 +64,9 @@ class RecordPage(graphics.Window):
             self.win.addstr(2 + index + 1,
                             label_len + 1 + max(name_len, 4) + 1, time_str,
                             curses.A_NORMAL)
-        record_time_start_x = time_start_x + time_len + 1
-        self.win.addstr(2, record_time_start_x, localize.tr("记录时间"),
+        record_time_start_x = time_start_x + max(time_len, uni_len(
+            page_columns[1])) + 1
+        self.win.addstr(2, record_time_start_x, page_columns[2],
                         curses.A_NORMAL)
         for index, record in enumerate(self.records.get(label, [])):
             self.win.addstr(2 + index + 1, record_time_start_x,
