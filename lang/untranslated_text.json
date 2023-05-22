@@ -553,6 +553,7 @@
     },
     {
         "text": "继续游戏",
+<<<<<<< Updated upstream
         "lang": "zh-CN"
     },
     {
@@ -562,5 +563,8 @@
     {
         "text": "按上下方向键切换要查看排行榜的模式，\n按“h”键切换用时显示方式，\n按“q”键退出排行榜。",
         "lang": "zh-CN"
+=======
+        "lang": "en"
+>>>>>>> Stashed changes
     }
 ]
