@@ -6,8 +6,7 @@
     "查看排行榜": "View the records",
     "打开游戏教程": "Open game tutorial",
     "关于游戏": "About this game",
-    "游戏设置": "Game Settings",
-	"退出游戏": "Quit this game",
+    "退出游戏": "Quit this game",
     "如需启动游戏，可输入“python3 {}”并按Enter键。": "If you want to start the game, type \"python3 {}\" and press the Enter key.",
     "游戏教程": "Game Tutorial",
     "上方向键": "Up arrow key",
@@ -46,7 +45,7 @@
     "按上下方向键选择所玩模式，按空格键可锁定模式。\n“自定义”模式可以自定义地图大小及雷数，\n“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。": "Press up or down arrow key to choose the mode you want to play, press space key to lock the mode.\nYou can set map size and mine num on your own in \"Custom\" mode,\nthe \"Lock mode\" option determines whether to return to the mode selection screen when restarting the game.'",
     "请输入地图宽度、高度和雷数。\n按Tab键切换输入项。\n按Enter键确认输入的地图信息。\n“锁定模式”选项决定在重新开始游戏时是否回到模式选择界面。": "Please enter the width of the map, the height of the map and the mine num.\nPress Tab key to change the input item.\nPress Enter key to comfirm the map attributes you have entered.\nThe \"Lock mode\" option determines whether to return to the mode selection screen when restarting the game.",
     "地图符号：\n        #：未翻开的格子。\n     空格：已翻开的格子。\n        *：雷。\n数字(1-9)：格子周围3x3范围内其余8个格子中含有的雷数。\n        F：插旗。": "Map symbols:\n            #: The covers.\n       Spaces: The blank blocks.\n            *: Mines.\nNumbers (1-9): The num of mines which are in 8 blocks in the 3x3 area except the current block.\n            F: Flags.",
-    "请按上下方向键选择模式，\n按空格键选择是否锁定该模式，\n按“q”键退出该界面": "Please press up or down arrow key to choose a mode,\npress space key to decide whether you lock the mode,\npress 'q' key to quit tis page.",
+    "请按上下方向键选择模式，\n按空格键选择是否锁定该模式，\n按“q”键退出该界面": "Please press up or down arrow key to choose a mode,\npress space key to decide whether you lock the mode,\npress 'q' key to quit this page.",
     "简单": "Simple",
     "标准": "Standard",
     "中等": "Medium",
@@ -61,6 +60,7 @@
     "生成地图中……": "Generating the map ...",
     "剩余雷数：{mine_num}，用时：{time_str}": "Remain mines: {mine_num}, elapsed time: {time_str}",
     "抱歉，该游戏出现错误。是否重新启动游戏？(y/n) ": "Sorry, the game happens some mistakes. Restart the game? (y/n) ",
+    "游戏设置": "Game Settings",
     "欢迎来到扫雷游戏教程。按Enter键进入教程，按“q”键退出教程。": "Welcome to the minesweeper game tutorial. Press Enter key to enter the tutorial, press 'q' key to quit the tutorial.",
     "按左右方向键切换所选方案，按“q”键返回上一级设置。": "Press left or right arrow key to change the key soluation, press 'q' key to return to the previous setting.",
     "为了更好地畅玩扫雷，建议你查看键位设置。\n是否现在打开键位设置？(y/n)": "In order to play the minesweeper better, I suggest you view the key setting.\nOpen the key setting now? (y/n)",
@@ -72,7 +72,8 @@
     "你插旗太多了，电摇你！": "You have flagged too many blocks, what a pity!",
     "你赢了！": "You are win!",
     "请输入你的名字（默认为Anonymous）：": "Please enter your name (default is \"Anonymous\"): ",
-    "抱歉，该游戏出现错误。是否重新启动游戏？(y/n)" : "Sorry, the game happens some mistakes. Restart the game? (y/n) ",
+    "抱歉，该游戏出现错误。是否重新启动游戏？(y/n)": "Sorry, the game happens some mistakes. Restart the game? (y/n) ",
     "游戏已暂停。按“{}”键以继续游戏。": "The game is paused. Press \"{}\" key to continue the game.",
-    "游戏已保存。": "The game is saved."
+    "游戏已保存。": "The game is saved.",
+    "继续游戏": ""
 }

@@ -7,49 +7,59 @@ import tool_constants
 
 print("Initializing tool ...")
 readline.clear_history()
+with open(os.path.join(tool_constants.lang_path, "lang.json")) as settings:
+    supported_languages = json.load(settings)["support_languages"]
+untranslated_text_dict = {lang: {} for lang in supported_languages}
+untranslated_text_set = set()
 with open(os.path.join(tool_constants.lang_path,
                        r"untranslated_text.json")) as log:
     untranslated_text_list = json.load(log)
-untranslated_text_dict = {}
 for item in untranslated_text_list:
     untranslated_text_dict.setdefault(item["lang"], {})
     untranslated_text_dict[item["lang"]][item["text"]] = ""
-for lang in untranslated_text_dict.keys():
+    untranslated_text_set.add(item["text"])
+del untranslated_text_list
+for lang in supported_languages:
     lang_file = os.path.join(tool_constants.lang_path, "{lang}.json".format(
         lang=lang))
     if not os.path.exists(lang_file):
         continue
+    untranslated_text_dict.setdefault(lang, {})
     with open(lang_file) as file:
-        untranslated_text_dict[lang].update(json.load(file))
-with open(os.path.join(tool_constants.lang_path, "lang.json")) as settings:
-    supported_languages = json.load(settings)["support_languages"]
+        translated_text_dict = json.load(file)
+    untranslated_text_dict[lang].update(translated_text_dict)
+    untranslated_text_set.update(translated_text_dict.keys())
+for lang in untranslated_text_dict.keys():
+    for text in untranslated_text_set:
+        untranslated_text_dict[lang].setdefault(text, "")
+untranslated_text_list = list(untranslated_text_set)
 
 
-def askYesOrNo(prompt: str = "", default: bool = True,
+def askYesOrNo(prompt: str = "", default: bool | None = None,
                retry: bool = True) -> bool:
     prompt = str(prompt)
     if prompt:
         if "(y/n)" not in prompt.lower():
             choice = "({yes}/{no})".format(
-                yes='Y' if default else 'y',
-                no='N' if not default else 'n')
+                yes='Y' if default is True else 'y',
+                no='N' if default is False else 'n')
             prompt = ' '.join((prompt, choice, ''))
     else:
         prompt = "Please enter y or n: "
-    default = bool(default)
     while True:
         user_input = input(prompt).lower()
         if not user_input:
-            res = default
-            break
-        if user_input in ('y', 'n'):
+            if default is not None:
+                res = bool(default)
+                break
+        elif user_input in ('y', 'n'):
             res = user_input == 'y'
-            break
-        if not retry:
-            res = False
             break
         print("Your input is invaild. Please enter y or n.",
               file=sys.stderr)
+        if not retry:
+            res = False
+            break
     return res
 
 
@@ -62,19 +72,17 @@ def exitTool():
 
 
 def printTextTable():
-    global untranslated_text_dict
+    global untranslated_text_list
     print("===== The untranslated text table =====")
-    for lang, text_list in untranslated_text_dict.items():
-        print("{}:".format(lang))
-        for index, text in enumerate(text_list, 1):
-            print("\t{num}.{text}".format(num=index, text=repr(text)))
+    for index, text in enumerate(untranslated_text_list, 1):
+        print("{num}.{text}".format(num=index, text=repr(text)))
 
 
 def printLanguages():
     global supported_languages
     print("===== The supported languages list =====")
     for index, lang in enumerate(supported_languages, 1):
-        print(f"{index}. {lang}")
+        print(f"{index}.{lang}")
 
 
 def translateText():
@@ -94,9 +102,16 @@ def translateText():
             print("Your input is invaild. Translation is aborted.",
                   file=sys.stderr)
             break
-        untranslated_text = untranslated_text_list[index]["text"]
+        untranslated_text = untranslated_text_list[index]
         print("The text is {}.".format(repr(untranslated_text)))
-        translated_text = input("Please enter the translated text:\n")
+        translated_text = untranslated_text_dict[lang][untranslated_text]
+        if translated_text.strip():
+            print("A translated text is {}.".format(repr(translated_text)))
+        try:
+            translated_text = input("Please enter the translated text:\n")
+        except KeyboardInterrupt:
+            print("The translation is finished.")
+            break
         translated_text = eval(repr(translated_text).replace('\\\\', '\\'))
         untranslated_text_dict[lang][untranslated_text] = translated_text
         if not askYesOrNo("Do you want to translate another text?"):
