@@ -62,6 +62,7 @@
     "抱歉，该游戏出现错误。是否重新启动游戏？(y/n) ": "Sorry, the game happens some mistakes. Restart the game? (y/n) ",
     "游戏设置": "Game Settings",
     "按上下方向键切换要查看排行榜的模式，\n按“h”键切换用时显示方式，\n按“q”键退出排行榜。": "Press up or down arrow key to change the mode you want to view,\npress 'h' key to change the format of elapsed time,\npress 'q' key to quit the records page.",
+    "继续游戏": "Continue the game",
     "欢迎来到扫雷游戏教程。按Enter键进入教程，按“q”键退出教程。": "Welcome to the minesweeper game tutorial. Press Enter key to enter the tutorial, press 'q' key to quit the tutorial.",
     "按左右方向键切换所选方案，按“q”键返回上一级设置。": "Press left or right arrow key to change the key soluation, press 'q' key to return to the previous setting.",
     "为了更好地畅玩扫雷，建议你查看键位设置。\n是否现在打开键位设置？(y/n)": "In order to play the minesweeper better, I suggest you view the key setting.\nOpen the key setting now? (y/n)",
@@ -75,6 +76,5 @@
     "请输入你的名字（默认为Anonymous）：": "Please enter your name (default is \"Anonymous\"): ",
     "抱歉，该游戏出现错误。是否重新启动游戏？(y/n)": "Sorry, the game happens some mistakes. Restart the game? (y/n) ",
     "游戏已暂停。按“{}”键以继续游戏。": "The game is paused. Press \"{}\" key to continue the game.",
-    "游戏已保存。": "The game is saved.",
-    "继续游戏": ""
+    "游戏已保存。": "The game is saved."
 }

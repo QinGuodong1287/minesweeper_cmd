@@ -6,19 +6,33 @@ import readline
 
 import tool_constants
 
+print("Welcome to the localization configuration tool.")
+print("Latest modified date: 2023/5/23.")
+print()
 print("Initializing tool ...")
 readline.clear_history()
 with open(os.path.join(tool_constants.lang_path, "lang.json")) as settings:
     supported_languages = json.load(settings)["support_languages"]
 untranslated_text_dict = {lang: {} for lang in supported_languages}
-untranslated_text_set = set()
+untranslated_text_attr_list = [{}]
+text_index = 1
 with open(os.path.join(tool_constants.lang_path,
                        r"untranslated_text.json")) as log:
     untranslated_text_list = json.load(log)
 for item in untranslated_text_list:
     untranslated_text_dict.setdefault(item["lang"], {})
     untranslated_text_dict[item["lang"]][item["text"]] = ""
-    untranslated_text_set.add(item["text"])
+    if item["text"] in untranslated_text_attr_list[0]:
+        cur_text_index = untranslated_text_attr_list[0][item["text"]]
+        (untranslated_text_attr_list[cur_text_index]
+         ["untranslated_languages"].add(item["lang"]))
+    else:
+        untranslated_text_attr_list.append({
+            "text": item["text"],
+            "untranslated_languages": set((item["lang"],)),
+            "translated_languages": set()})
+        untranslated_text_attr_list[0][item["text"]] = text_index
+        text_index += 1
 del untranslated_text_list
 for lang in supported_languages:
     lang_file = os.path.join(tool_constants.lang_path, "{lang}.json".format(
@@ -29,11 +43,30 @@ for lang in supported_languages:
     with open(lang_file) as file:
         translated_text_dict = json.load(file)
     untranslated_text_dict[lang].update(translated_text_dict)
-    untranslated_text_set.update(translated_text_dict.keys())
+    for text in translated_text_dict.keys():
+        if text in untranslated_text_attr_list[0]:
+            cur_text_index = untranslated_text_attr_list[0][text]
+            (untranslated_text_attr_list[cur_text_index]
+             ["untranslated_languages"].discard(lang))
+            (untranslated_text_attr_list[cur_text_index]
+             ["translated_languages"].add(lang))
+        else:
+            untranslated_text_attr_list.append({
+                "text": text,
+                "untranslated_languages": set(),
+                "translated_languages": set((lang,))})
+            untranslated_text_attr_list[0][text] = text_index
+            text_index += 1
 for lang in untranslated_text_dict.keys():
-    for text in untranslated_text_set:
-        untranslated_text_dict[lang].setdefault(text, "")
-untranslated_text_list = list(untranslated_text_set)
+    for text in untranslated_text_attr_list[0].keys():
+        if text in untranslated_text_dict[lang]:
+            continue
+        untranslated_text_dict[lang][text] = ""
+        if text in untranslated_text_attr_list[0]:
+            cur_text_index = untranslated_text_attr_list[0][text]
+            (untranslated_text_attr_list[cur_text_index]
+             ["untranslated_languages"].add(lang))
+del text_index, cur_text_index
 
 
 def askYesOrNo(prompt: str = "", default: bool | None = None,
@@ -73,12 +106,13 @@ def exitTool():
 
 
 def printTextTable():
-    global untranslated_text_list
-    index_len = int(math.log10(len(untranslated_text_list))) + 1
+    global untranslated_text_attr_list
+    index_len = int(math.log10(len(untranslated_text_attr_list) - 1)) + 1
     print("===== The untranslated text table =====")
-    for index, text in enumerate(untranslated_text_list, 1):
+    for index in range(1, len(untranslated_text_attr_list)):
+        item = untranslated_text_attr_list[index]
         print("{num}.{text}".format(num=str(index).rjust(index_len),
-                                    text=repr(text)))
+                                    text=repr(item["text"])))
 
 
 def printLanguages():
@@ -89,7 +123,7 @@ def printLanguages():
 
 
 def translateText():
-    global untranslated_text_dict, untranslated_text_list
+    global untranslated_text_dict, untranslated_text_attr_list
     keep_lang = False
     while True:
         try:
@@ -98,14 +132,14 @@ def translateText():
                 if lang not in untranslated_text_dict.keys():
                     raise ValueError
                 keep_lang = askYesOrNo("Keep this language?")
-            index = int(input("Please enter the number of the text: ")) - 1
-            if not (0 <= index < len(untranslated_text_dict[lang])):
+            index = int(input("Please enter the number of the text: "))
+            if not (1 <= index < len(untranslated_text_attr_list)):
                 raise ValueError
         except ValueError:
             print("Your input is invaild. Translation is aborted.",
                   file=sys.stderr)
             break
-        untranslated_text = untranslated_text_list[index]
+        untranslated_text = untranslated_text_attr_list[index]["text"]
         print("The text is {}.".format(repr(untranslated_text)))
         translated_text = untranslated_text_dict[lang][untranslated_text]
         if translated_text.strip():
