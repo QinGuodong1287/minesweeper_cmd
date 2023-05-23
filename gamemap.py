@@ -112,6 +112,8 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         self.end_time = self.start_time = 0
         self.total_time = stat.get("total_time", 0)
         self.game_started = self.total_time > 0
+        self.text_table = {
+            "game_saved": localize.tr("游戏已保存。")}
         self.load_settings()
         self.records = {}
         read_records(self.records)
@@ -340,6 +342,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
             self.max_mine_num.set(items["max_mine_num"])
             custom_win.nodelay(False)
             curses.echo()
+
         while True:
             terminal_size = os.get_terminal_size()
             start_y = (terminal_size.lines - prompt_line_num - label_num -
@@ -644,7 +647,7 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
             self.win.addstr(
                 terminal_size.lines - 1,
                 num_len(self.height.get()) + 1 + num_len(self.width.get()) + 1,
-                ' ' * 12, curses.A_NORMAL)
+                ' ' * uni_len(self.text_table["game_saved"]), curses.A_NORMAL)
         self.switch_tutor(self.tutor_labels[self.tutor_label_index])
         self.refresh()
         if time() - self.detect_time > 0.5:
@@ -934,15 +937,12 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         elif key == self.keyset["game"]["save"]:
             self.record_time()
             self.record_time()
-            savemap(self.game_map, self.mine_map, self.total_time,
-                    self.remain_blocks.get(), self.mine_num.get(),
-                    self.max_mine_num.get(), self.real_mine_num.get(),
-                    self.mine_pos, self.blank_pos)
+            self.save_map()
             self.game_saved = True
             self.win.addstr(
                 terminal_size.lines - 1,
                 num_len(self.height.get()) + 1 + num_len(self.width.get()) + 1,
-                localize.tr("游戏已保存。"), curses.A_NORMAL)
+                self.text_table["game_saved"], curses.A_NORMAL)
         elif key == self.keyset["game"]["settings"]:
             if not self.game_paused:
                 self.pause_game()
