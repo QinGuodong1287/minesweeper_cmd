@@ -1,5 +1,6 @@
 import os
 import json
+import math
 import sys
 import readline
 
@@ -73,9 +74,11 @@ def exitTool():
 
 def printTextTable():
     global untranslated_text_list
+    index_len = int(math.log10(len(untranslated_text_list))) + 1
     print("===== The untranslated text table =====")
     for index, text in enumerate(untranslated_text_list, 1):
-        print("{num}.{text}".format(num=index, text=repr(text)))
+        print("{num}.{text}".format(num=str(index).rjust(index_len),
+                                    text=repr(text)))
 
 
 def printLanguages():
@@ -150,13 +153,14 @@ tool_cases = [
     {
         "label": "Retain all texts.",
         "target": retainAllTexts
-    }]
+    }
+]
 tool_cases_num = len(tool_cases)
 while running:
     try:
         print()
         for index, case in enumerate(tool_cases):
-            print("{}.".format(index), case["label"])
+            print("{index}.{label}".format(index=index, label=case["label"]))
         op = int(input())
         if not (0 <= op < tool_cases_num):
             raise ValueError
@@ -166,7 +170,7 @@ while running:
     print()
     tool_cases[op]["target"]()
 if askYesOrNo("Save translation data?"):
-    print("Saving translate data ...")
+    print("Saving translation data ...")
     for lang, lang_data in untranslated_text_dict.items():
         with open(
             os.path.join(tool_constants.lang_path,
