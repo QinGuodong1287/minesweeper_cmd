@@ -1,12 +1,13 @@
 from functools import reduce
-from time import ctime, time
+from time import time
 import os
 import curses
 
-from constants import records_file
-from basic_functions import uni_len, loadDict, saveFile
-import graphics
-import localize
+from . import loader
+from core.basic_functions import uni_len
+from core import graphics
+from core import localize
+from core.record import read_records
 
 
 class RecordPage(graphics.Window):
@@ -97,28 +98,3 @@ class RecordPage(graphics.Window):
             self.label_index = (self.label_index + 1) % len(labels)
         elif key == ord('h'):
             self.format_time = not self.format_time
-
-
-def read_records(records):
-    loadDict(records_file, records)
-
-
-def store_record(records, width, height, max_mine_num, total_time,
-                 name="Anonymous"):
-    time_str = ctime()
-    label = "{}x{}-{}".format(width, height, max_mine_num)
-    if label not in records:
-        records[label] = []
-    name = name or "Anonymous"
-    try:
-        plain_name = str(name, "utf-8")
-    except TypeError:
-        plain_name = name
-    records[label].append({"name": plain_name, "time": total_time,
-                           "record_time": time_str})
-    records[label].sort(key=lambda rec: rec["time"])
-    del records[label][10:]
-
-
-def save_records(records):
-    saveFile(records_file, records)

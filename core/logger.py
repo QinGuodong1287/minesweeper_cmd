@@ -1,7 +1,7 @@
 import os
 import traceback
 
-from constants import error_file
+from .constants import error_file
 
 
 def log(filename, data):

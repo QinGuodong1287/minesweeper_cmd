@@ -2,16 +2,17 @@ import os
 import curses
 from time import time
 
-from constants import __version__, map_file
-from basic_functions import uni_len, num_len, str_ljust
-import graphics
-from gamemap import MainGameMap, clearmap
-from record import RecordPage
-from settings import Settings
-from about import AboutGame
-from tutorial import GameTutorialPage
-import tutorial
-import localize
+from . import loader
+from core.constants import __version__, map_file
+from core.basic_functions import uni_len, num_len, str_ljust
+from core import graphics
+from core import localize
+from .gamemap import MainGameMap, clearmap
+from .record import RecordPage
+from .settings import Settings
+from .about import AboutGame
+from .tutorial import GameTutorialPage
+from . import tutorial
 
 
 class Minesweeper(tutorial.GameTutorialMixin, graphics.Window):

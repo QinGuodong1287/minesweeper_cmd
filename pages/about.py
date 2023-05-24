@@ -1,10 +1,11 @@
 import os
 import curses
 
-from constants import __version__
-from basic_functions import uni_len
-import graphics
-import localize
+from . import loader
+from core.constants import __version__
+from core.basic_functions import uni_len
+from core import graphics
+from core import localize
 
 
 class AboutGame(graphics.Window):

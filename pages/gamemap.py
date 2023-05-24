@@ -5,14 +5,16 @@ from random import randrange
 from time import time
 import curses
 
-from constants import map_file
-from basic_data_type import LimitedVar
-from basic_functions import uni_len, num_len, str_ljust, loadFile, saveFile
-import graphics
-import settings
-from record import read_records, store_record, save_records
-import tutorial
-import localize
+from . import loader
+from core.constants import map_file
+from core.basic_data_type import LimitedVar
+from core.basic_functions import (uni_len, num_len, str_ljust, loadFile,
+                                  saveFile)
+from core import graphics
+from core import settings
+from core.record import read_records, store_record, save_records
+from core import localize
+from . import tutorial
 
 
 class Block:

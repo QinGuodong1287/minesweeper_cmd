@@ -1,8 +1,8 @@
 import os
 import atexit
 
-import constants
-import basic_functions
+from . import constants
+from . import basic_functions
 
 lang_path = os.path.join(constants.program_path, r"lang")
 if not os.path.exists(lang_path):

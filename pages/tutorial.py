@@ -3,9 +3,10 @@ import os
 import curses
 from functools import reduce
 
-from basic_functions import uni_len, str_ljust
-import graphics
-import localize
+from . import loader
+from core.basic_functions import uni_len, str_ljust
+from core import graphics
+from core import localize
 
 tutor_active = False
 
