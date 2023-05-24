@@ -4,7 +4,10 @@ import math
 import sys
 import readline
 
-import tool_constants
+try:
+    from . import tool_constants
+except ImportError:
+    import tool_constants
 
 print("Welcome to the localization configuration tool.")
 print("Latest modified date: 2023/5/23.")
