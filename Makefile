@@ -7,4 +7,4 @@ deploy:
 	zip ../minesweeper_cmd_tool.zip tool/ README.md LICENSE
 
 clean:
-	rm -i ../minesweeper_cmd.zip ../minesweeper_cmd_tool.zip
+	rm -r ../minesweeper_cmd.zip ../minesweeper_cmd_tool.zip
