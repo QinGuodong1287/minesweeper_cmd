@@ -6,14 +6,15 @@ from time import time
 import curses
 
 from . import loader
+import core
 from core.constants import map_file
 from core.basic_data_type import LimitedVar
 from core.basic_functions import (uni_len, num_len, str_ljust, loadFile,
                                   saveFile)
 from core import graphics
-from core import settings
 from core.record import read_records, store_record, save_records
 from core import localize
+from . import settings
 from . import tutorial
 
 
@@ -70,7 +71,6 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
     }
 
     def __init__(self, parent):
-        global settings
         super().__init__(parent=parent)
         stat = {}
         loadmap(stat)
@@ -402,8 +402,8 @@ class MainGameMap(tutorial.GameTutorialMixin, graphics.Window):
         mode_win.refresh()
 
     def load_settings(self):
-        self.settings = settings.settings
-        keymap = settings.settings["keymap"]
+        self.settings = core.settings.settings
+        keymap = core.settings.settings["keymap"]
         keyset = keymap["keyset"]
         self.keyset = keyset[keymap["current_keyset"]]["key"]
 

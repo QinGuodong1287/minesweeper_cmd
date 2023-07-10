@@ -4,8 +4,8 @@ class LimitedVar:
         if min_value is not None and max_value is not None and min_value > \
                 max_value:
             max_value = min_value
-        self.min_value = min_value
-        self.max_value = max_value
+        self.__min_value = min_value
+        self.__max_value = max_value
         self.__correct_value()
 
     def __correct_value(self):
@@ -19,22 +19,39 @@ class LimitedVar:
     def set(self, new_value=None):
         self.value = new_value
         self.__correct_value()
-        """
-        try:
-            raise Exception
-        except:
-            import os, traceback
-            if not os.path.exists(r"varlog.log"):
-                with open(r"varlog.log", "w") as fp:
-                    pass
-            with open(r"varlog.log", "a") as fp:
-                traceback.print_exc(file=fp)
-                fp.write(str(type(self.value)) + ' ' + str(self.value))
-                fp.write('\n\n')
-        """
 
     def get(self):
         return self.value
 
     def __getattr__(self, name):
         return getattr(self.value, name)
+
+    @property
+    def min_value(self):
+        return self.__min_value
+
+    @min_value.setter
+    def min_value(self, min_value):
+        self.__min_value = min_value
+        self.__correct_value()
+
+    @min_value.deleter
+    def min_value(self):
+        del self.__min_value
+        self.__min_value = None
+        self.__correct_value()
+
+    @property
+    def max_value(self):
+        return self.__max_value
+
+    @max_value.setter
+    def max_value(self, max_value):
+        self.__max_value = max_value
+        self.__correct_value()
+
+    @max_value.deleter
+    def max_value(self):
+        del self.__max_value
+        self.__max_value = None
+        self.__correct_value()

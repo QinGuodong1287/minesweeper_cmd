@@ -3,13 +3,19 @@ import collections
 import os
 import curses
 
+from .basic_data_type import LimitedVar
+
 stdscr = None
 
-WHITE = 0
+BLACK = 0
 RED = 1
 GREEN = 2
+YELLOW = 3
 BLUE = 4
+MAGENTA = 5
 CYAN = 6
+WHITE = 7
+__initialized = False  # Do not assign this variable manually.
 
 
 def init():
@@ -19,30 +25,53 @@ def init():
     curses.noecho()
     curses.start_color()
     stdscr.keypad(True)
-    global WHITE, RED, GREEN, BLUE, CYAN
-    curses.init_pair(RED, curses.COLOR_RED, curses.COLOR_BLACK)
-    curses.init_pair(GREEN, curses.COLOR_GREEN, curses.COLOR_BLACK)
-    curses.init_pair(BLUE, curses.COLOR_BLUE, curses.COLOR_BLACK)
-    curses.init_pair(CYAN, curses.COLOR_CYAN, curses.COLOR_BLACK)
-    curses.init_pair(WHITE + 10, curses.COLOR_BLACK, curses.COLOR_WHITE)
-    curses.init_pair(GREEN + 10, curses.COLOR_BLACK, curses.COLOR_GREEN)
-    curses.init_pair(RED + 10, curses.COLOR_BLACK, curses.COLOR_RED)
-    curses.init_pair(BLUE + 10, curses.COLOR_BLACK, curses.COLOR_BLUE)
-    curses.init_pair(CYAN + 10, curses.COLOR_BLACK, curses.COLOR_CYAN)
-    global COLOR_WHITE, COLOR_RED, COLOR_GREEN, COLOR_BLUE, COLOR_CYAN
-    COLOR_WHITE = curses.color_pair(WHITE)
+    global BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE
+    color_table = {
+        # BLACK: {},
+        RED: {"fg": curses.COLOR_RED},
+        GREEN: {"fg": curses.COLOR_GREEN},
+        YELLOW: {"fg": curses.COLOR_YELLOW},
+        BLUE: {"fg": curses.COLOR_BLUE},
+        MAGENTA: {"fg": curses.COLOR_MAGENTA},
+        CYAN: {"fg": curses.COLOR_CYAN},
+        WHITE: {"fg": curses.COLOR_WHITE}
+    }
+    for color_num, color in color_table.items():
+        curses.init_pair(
+            color_num,
+            color.get("fg", curses.COLOR_BLACK),
+            color.get("bg", curses.COLOR_BLACK))
+        curses.init_pair(
+            color_num + 10,
+            color.get("bg", curses.COLOR_BLACK),
+            color.get("fg", curses.COLOR_BLACK))
+    global COLOR_BLACK, COLOR_RED, COLOR_GREEN, COLOR_YELLOW, COLOR_BLUE,\
+        COLOR_MAGENTA, COLOR_CYAN, COLOR_WHITE
+    COLOR_BLACK = curses.color_pair(BLACK)
     COLOR_RED = curses.color_pair(RED)
     COLOR_GREEN = curses.color_pair(GREEN)
+    COLOR_YELLOW = curses.color_pair(YELLOW)
     COLOR_BLUE = curses.color_pair(BLUE)
+    COLOR_MAGENTA = curses.color_pair(MAGENTA)
     COLOR_CYAN = curses.color_pair(CYAN)
+    COLOR_WHITE = curses.color_pair(WHITE)
     global KEY_BACKSPACE
     KEY_BACKSPACE = 127
+    global __initialized
+    __initialized = True
 
 
 def end():
     global stdscr
     curses.endwin()
     stdscr = None
+    global __initialized
+    __initialized = False
+
+
+def isinitialized():
+    global __initialized
+    return __initialized
 
 
 Point = collections.namedtuple("Point", ("x", "y"))
@@ -55,6 +84,7 @@ class Widget:
         if parent is not None and not isinstance(parent, Widget):
             raise ValueError("The parent window is not a Widget instance.")
         global stdscr
+        # Use relative coordinates.
         self.geometry = {"x": x, "y": y, "width": width, "height": height}
         self.attrs = attrs
         self.pad_mode = bool(pad_mode)
@@ -63,14 +93,13 @@ class Widget:
         self.__fix_geometry()
         self.last_geometry = {}
         self.last_geometry.update(self.geometry)
-        self.terminal_size = os.get_terminal_size()
         if parent is not None and self not in self.parent.children:
             self.parent.children.append(self)
-        self.initWin()
         self.running = False
         self.error = False
         self.show = True
         self.repaint = False
+        self.initWin()
 
     def __fix_geometry(self):
         self.terminal_size = terminal_size = os.get_terminal_size()
@@ -325,4 +354,12 @@ class Widget:
 class Window(Widget):
     def __init__(self, x=None, y=None, width=None, height=None, parent=None,
                  **attrs):
-        super().__init__(x, y, width, height, parent, False, **attrs)
+        super().__init__(x=x, y=y, width=width, height=height, parent=parent,
+                         pad_mode=False, **attrs)
+
+
+class ProgressBar(Widget):
+    def __init__(self, x=None, y=None, width=None, height=None, parent=None,
+                 **attrs):
+        super().__init__(x=x, y=y, width=width, height=height, parent=parent,
+                         **attrs)
